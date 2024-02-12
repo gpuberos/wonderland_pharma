@@ -23,13 +23,13 @@ function displaySection($db, $sectionCategory)
     // On vérifie si la section principale de la page courante existe.
     if (!empty($sections)) {
         // Si elle existe, on récupère les informations de cette section.
-        foreach ($sections as $section) {
+        foreach ($sections as $row) {
             // On affiche la section en utilisant echo. La section est composée d'un titre (h2) et d'un contenu (p).
             // Le titre et le contenu sont récupérés à partir du tableau $section.
             echo '
             <section class="mb-5">
-                <h2 class="text-center fs-1 mb-4">' . $section['section_title'] . '</h2>
-                <p class="fs-22">' . $section['section_description'] . '</p>
+                <h2 class="text-center fs-1 mb-4">' . $row['section_title'] . '</h2>
+                <p class="fs-22">' . $row['section_description'] . '</p>
             </section>
             ';
         }
@@ -65,11 +65,18 @@ function findAllDatas($db, $sql)
 function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
-    $productsQuery = "SELECT products.*, product_category.category_name
-                    FROM products
-                    INNER JOIN product_category ON products.product_category_id = product_category.id
-                    ORDER BY product_price $orderBy";
-
+    $productsQuery = "SELECT 
+                      products.product_title, 
+                      products.product_description, 
+                      products.product_price, 
+                      product_category.category_name, 
+                      product_pictures.pathImg 
+                      FROM products 
+                      INNER JOIN product_category ON products.product_category_id = product_category.id
+                      INNER JOIN product_pictures ON product_pictures.product_id = products.id
+                      ORDER BY product_price $orderBy;
+                     ";
+    
     // Appel de la fonction findAllDatas pour exécuter la requête et renvoyer les résultats
     return findAllDatas($db, $productsQuery);
 }

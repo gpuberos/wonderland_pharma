@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : sam. 03 fév. 2024 à 19:29
+-- Généré le : lun. 12 fév. 2024 à 22:41
 -- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.13
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données : `dbbrief_med`
+-- Base de données : `db_wpharma`
 --
 
 -- --------------------------------------------------------
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS `doctors` (
   `id` int NOT NULL AUTO_INCREMENT,
   `doctor_name` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   `doctor_description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `doctor_pathimg` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,11 +39,64 @@ CREATE TABLE IF NOT EXISTS `doctors` (
 -- Déchargement des données de la table `doctors`
 --
 
-INSERT INTO `doctors` (`id`, `doctor_name`, `doctor_description`, `doctor_pathimg`) VALUES
-(1, 'Alice', 'Dr. Alice Kingsleigh, médecin renommée du pays des merveilles, apporte sa magie à la médecine moderne. Forte de son expérience dans des mondes fantastiques, elle assure la qualité des médicaments disponibles sur notre site. Sa combinaison unique de rigueur scientifique et de créativité offre des solutions novatrices pour le bien-être de tous. Faites confiance au Dr. Alice Kingsleigh pour des conseils médicaux exceptionnels au-delà de l\'ordinaire.', 'alice-doctor.webp'),
-(2, 'Chapelier Fou', 'Le Chapelier Fou, expert excentrique en potions et remèdes du pays des merveilles, apporte une touche de folie à la médecine. Sa créativité débordante et sa compréhension unique des ingrédients inhabituels font de lui une figure clé dans le domaine pharmaceutique. En naviguant à travers des réalités fantaisistes, le Chapelier Fou propose des solutions médicales hors du commun pour favoriser le bien-être de chacun. Sa folie maîtrisée et son savoir atypique font de lui un allié surprenant et fiable dans la recherche de conseils médicaux singuliers et innovants.', 'madhatter-doctor.webp'),
-(3, 'La Chenille', 'La Chenille, experte énigmatique du pays des merveilles, offre une perspective unique en tant que conseillère médicale. Sa sagesse transcendantale et son approche contemplative se reflètent dans la sélection minutieuse des produits pharmaceutiques sur notre site. La Chenille, avec son regard perspicace et son penchant pour les remèdes naturels, incarne une approche holistique de la santé. Confiez-vous à la guidance exceptionnelle de la Chenille pour des conseils médicaux uniques et apaisants.', 'caterpillar-doctor.webp'),
-(4, 'Tweedledum et Tweedledee', 'Tweedledum et Tweedledee, experts du bien-être au pays des merveilles, ajoutent une touche ludique à la médecine. Ces jumeaux énergiques apportent une perspective unique, mêlant fantaisie et soins de santé. Leurs conseils, bien que farfelus, sont empreints d\'une jovialité contagieuse. En tant que figures clés sur notre site de vente de médicaments, Tweedledum et Tweedledee incarnent l\'harmonie entre la santé et la joie. Optez pour leur approche décalée pour une expérience médicale inédite et réjouissante.', 'twins-doctor.webp');
+INSERT INTO `doctors` (`id`, `doctor_name`, `doctor_description`) VALUES
+(1, 'Alice', 'Dr. Alice Kingsleigh, médecin renommée du pays des merveilles, apporte sa magie à la médecine moderne. Forte de son expérience dans des mondes fantastiques, elle assure la qualité des médicaments disponibles sur notre site. Sa combinaison unique de rigueur scientifique et de créativité offre des solutions novatrices pour le bien-être de tous. Faites confiance au Dr. Alice Kingsleigh pour des conseils médicaux exceptionnels au-delà de l\'ordinaire.'),
+(2, 'Chapelier Fou', 'Le Chapelier Fou, expert excentrique en potions et remèdes du pays des merveilles, apporte une touche de folie à la médecine. Sa créativité débordante et sa compréhension unique des ingrédients inhabituels font de lui une figure clé dans le domaine pharmaceutique. En naviguant à travers des réalités fantaisistes, le Chapelier Fou propose des solutions médicales hors du commun pour favoriser le bien-être de chacun. Sa folie maîtrisée et son savoir atypique font de lui un allié surprenant et fiable dans la recherche de conseils médicaux singuliers et innovants.'),
+(3, 'La Chenille', 'La Chenille, experte énigmatique du pays des merveilles, offre une perspective unique en tant que conseillère médicale. Sa sagesse transcendantale et son approche contemplative se reflètent dans la sélection minutieuse des produits pharmaceutiques sur notre site. La Chenille, avec son regard perspicace et son penchant pour les remèdes naturels, incarne une approche holistique de la santé. Confiez-vous à la guidance exceptionnelle de la Chenille pour des conseils médicaux uniques et apaisants.'),
+(4, 'Tweedledum et Tweedledee', 'Tweedledum et Tweedledee, experts du bien-être au pays des merveilles, ajoutent une touche ludique à la médecine. Ces jumeaux énergiques apportent une perspective unique, mêlant fantaisie et soins de santé. Leurs conseils, bien que farfelus, sont empreints d\'une jovialité contagieuse. En tant que figures clés sur notre site de vente de médicaments, Tweedledum et Tweedledee incarnent l\'harmonie entre la santé et la joie. Optez pour leur approche décalée pour une expérience médicale inédite et réjouissante.');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `doctors_products`
+--
+
+DROP TABLE IF EXISTS `doctors_products`;
+CREATE TABLE IF NOT EXISTS `doctors_products` (
+  `doctor_id` int NOT NULL,
+  `product_id` int NOT NULL,
+  KEY `doctor_id` (`doctor_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `doctors_products`
+--
+
+INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES
+(1, 1),
+(1, 2),
+(3, 3),
+(2, 4),
+(4, 5),
+(3, 6),
+(2, 7),
+(4, 8);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `doctor_pictures`
+--
+
+DROP TABLE IF EXISTS `doctor_pictures`;
+CREATE TABLE IF NOT EXISTS `doctor_pictures` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pathImg` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `doctor_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `doctor_id` (`doctor_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `doctor_pictures`
+--
+
+INSERT INTO `doctor_pictures` (`id`, `pathImg`, `doctor_id`) VALUES
+(1, 'alice-doctor.webp', 1),
+(2, 'madhatter-doctor.webp', 2),
+(3, 'caterpillar-doctor.webp', 3),
+(4, 'twins-doctor.webp', 4);
 
 -- --------------------------------------------------------
 
@@ -110,7 +162,6 @@ CREATE TABLE IF NOT EXISTS `products` (
   `product_title` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   `product_description` text COLLATE utf8mb4_general_ci NOT NULL,
   `product_price` float NOT NULL,
-  `product_pathimg` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   `product_category_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `product_category_id` (`product_category_id`)
@@ -120,15 +171,15 @@ CREATE TABLE IF NOT EXISTS `products` (
 -- Déchargement des données de la table `products`
 --
 
-INSERT INTO `products` (`id`, `product_title`, `product_description`, `product_price`, `product_pathimg`, `product_category_id`) VALUES
-(1, 'Drink Me', 'Une potion qui vous fait rétrécir ou grandir selon la quantité que vous buvez. Attention à ne pas en abuser !', 9.99, 'drink_me.webp', 2),
-(2, 'Eat Me', 'Un gâteau qui vous fait changer de taille selon la part que vous mangez. Idéal pour explorer des endroits inaccessibles !', 12.99, 'eat_me.webp', 3),
-(3, 'Upelkuchen', 'Un biscuit qui vous fait changer de couleur selon la saveur que vous choisissez. Parfait pour vous camoufler ou vous amuser !', 14.99, 'upelkuchen.webp', 3),
-(4, 'Jabberwocky Blood', 'Un élixir qui vous donne des pouvoirs magiques pendant une courte durée. Utilisez-le avec prudence !', 19.99, 'jabberwocky_Blood.webp', 2),
-(5, 'Outlandish', 'Une pilule qui vous fait changer de personnalité selon l’humeur que vous souhaitez. Idéale pour vous évader ou vous surprendre !', 16.99, 'outlandish.webp', 1),
-(6, 'Rose me', 'Un gâteau qui vous transforme en une rose rouge. Vous pouvez ainsi embellir le jardin de la Reine de cœur, mais attention à ne pas vous faire couper !', 11.99, 'rose_me.webp', 3),
-(7, 'Chess me', 'Un médicament qui vous fait entrer dans le jeu d’échecs vivant. Vous pouvez ainsi devenir un pion, un fou, une tour, un cavalier, un roi ou une reine, mais attention à ne pas vous faire échec et mat !', 6.99, 'chess_me.webp', 1),
-(8, 'Wonderland Tea', 'Un thé qui vous transporte dans le monde merveilleux d’Alice. Attention, vous ne contrôlez pas le temps ni le lieu de votre retour !', 24.99, 'wonderland_Tea.webp', 3);
+INSERT INTO `products` (`id`, `product_title`, `product_description`, `product_price`, `product_category_id`) VALUES
+(1, 'Drink Me', 'Une potion qui vous fait rétrécir ou grandir selon la quantité que vous buvez. Attention à ne pas en abuser !', 9.99, 2),
+(2, 'Eat Me', 'Un gâteau qui vous fait changer de taille selon la part que vous mangez. Idéal pour explorer des endroits inaccessibles !', 12.99, 3),
+(3, 'Upelkuchen', 'Un biscuit qui vous fait changer de couleur selon la saveur que vous choisissez. Parfait pour vous camoufler ou vous amuser !', 14.99, 3),
+(4, 'Jabberwocky Blood', 'Un élixir qui vous donne des pouvoirs magiques pendant une courte durée. Utilisez-le avec prudence !', 19.99, 2),
+(5, 'Outlandish', 'Une pilule qui vous fait changer de personnalité selon l\'humeur que vous souhaitez. Idéale pour vous évader ou vous surprendre !', 16.99, 1),
+(6, 'Rose me', 'Un gâteau qui vous transforme en une rose rouge. Vous pouvez ainsi embellir le jardin de la Reine de cœur, mais attention à ne pas vous faire couper !', 11.99, 3),
+(7, 'Chess me', 'Un médicament qui vous fait entrer dans le jeu d\'échecs vivant. Vous pouvez ainsi devenir un pion, un fou, une tour, un cavalier, un roi ou une reine, mais attention à ne pas vous faire échec et mat !', 6.99, 1),
+(8, 'Wonderland Tea', 'Un thé qui vous transporte dans le monde merveilleux d\'Alice. Attention, vous ne contrôlez pas le temps ni le lieu de votre retour !', 24.99, 3);
 
 -- --------------------------------------------------------
 
@@ -151,6 +202,35 @@ INSERT INTO `product_category` (`id`, `category_name`) VALUES
 (1, 'Comprimés magiques'),
 (2, 'Concoctions fantastiques'),
 (3, 'Saveurs enchantées');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `product_pictures`
+--
+
+DROP TABLE IF EXISTS `product_pictures`;
+CREATE TABLE IF NOT EXISTS `product_pictures` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pathImg` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `product_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `product_pictures`
+--
+
+INSERT INTO `product_pictures` (`id`, `pathImg`, `product_id`) VALUES
+(1, 'drink_me.webp', 1),
+(2, 'eat_me.webp', 2),
+(3, 'upelkuchen.webp', 3),
+(4, 'jabberwocky_Blood.webp', 4),
+(5, 'outlandish.webp', 5),
+(6, 'rose_me.webp', 6),
+(7, 'chess_me.webp', 7),
+(8, 'wonderland_Tea.webp', 8);
 
 -- --------------------------------------------------------
 
@@ -202,6 +282,19 @@ INSERT INTO `section_category` (`id`, `section_category_name`) VALUES
 --
 
 --
+-- Contraintes pour la table `doctors_products`
+--
+ALTER TABLE `doctors_products`
+  ADD CONSTRAINT `doctors_products_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`),
+  ADD CONSTRAINT `doctors_products_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Contraintes pour la table `doctor_pictures`
+--
+ALTER TABLE `doctor_pictures`
+  ADD CONSTRAINT `doctor_pictures_ibfk_1` FOREIGN KEY (`doctor_id`) REFERENCES `doctors` (`id`);
+
+--
 -- Contraintes pour la table `pages`
 --
 ALTER TABLE `pages`
@@ -212,6 +305,12 @@ ALTER TABLE `pages`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`product_category_id`) REFERENCES `product_category` (`id`);
+
+--
+-- Contraintes pour la table `product_pictures`
+--
+ALTER TABLE `product_pictures`
+  ADD CONSTRAINT `product_pictures_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
 -- Contraintes pour la table `sections`

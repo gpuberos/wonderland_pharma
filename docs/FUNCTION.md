@@ -1,4 +1,4 @@
-# Fonctions du site dbbrief_med
+# Fonctions du site wpharma
 
 ## database.fn.php
 
@@ -109,7 +109,7 @@ function displaySection($db, $sectionCategory)
 - `FROM pages` : nous indiquons que nous commençons par la table `sections`.
 - `INNER JOIN nav_category` : on joint la table `section_category` à la table `sections`. Un `INNER JOIN` retourne les lignes où il y a une correspondance dans les 2 tables.
 - `ON sections.section_category_id = section_category.id` : on spécifie la condition de jointure. Nous joignons les 2 tables, la colonne `section_category_id` de la table `sections` et la colonne `id` de la table `section_category`.
-- `WHERE section_category.section_category_name = :category` : on ajoute une condition à la requête. Seules les lignes où le `section_category_name` de la table `section_category` est égal à la valeur de `:category` (paramètre défini lors de l’exécution de la requête) seront retournées.
+- `WHERE section_category.section_category_name = :category` : on ajoute une condition à la requête. Seules les lignes où le `section_category_name` de la table `section_category` est égal à la valeur de `:category` (paramètre défini lors de l'exécution de la requête) seront retournées.
 
 ### findAllDatas($db, $sql)
 
@@ -119,27 +119,31 @@ Dans la fonction `findAllDatas(param1, param2)`, on passe en premier paramètre 
 
 ```php
 <?php
-// La requête SQL est stockée dans la variable $doctorsQuery puis est passé en paramètre dans fonction displayCards.
-$doctorsQuery = "SELECT doctors.* FROM doctors";
+// La requête SQL est stockée dans la variable $doctorsQuery puis est passé en paramètre dans la fonctidisplayCards.
+$doctorsQuery = "SELECT doctors.*, doctor_pictures.pathImg 
+                 FROM `doctors`
+                 INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id;
+                ";
 $doctors = findAllDatas($db, $doctorsQuery);
 
-foreach ($doctors as $doctor) :
+foreach ($doctors as $row) :
 ?>
     <div class="col">
         <div class="card h-100 text-center rounded-0">
-            <img src="<?= DOCTORS_IMG_PATH . $doctor['doctor_pathimg'] ?>" class="card-img-trounded-0" alt="<?= $doctor['doctor_name'] ?>">
+            <img src="<?= DOCTORS_IMG_PATH . $row['pathImg'] ?>" class="card-img-top rounded-0" alt="<?= $['doctor_name'] ?>">
             <div class="card-body">
-                <h5 class="card-title"><?= $doctor['doctor_name'] ?></h5>
-                <p class="card-text"><?= $doctor['doctor_description'] ?></p>
+                <h5 class="card-title"><?= $row['doctor_name'] ?></h5>
+                <p class="card-text"><?= $row['doctor_description'] ?></p>
             </div>
         </div>
     </div>
 <?php endforeach; ?>
 ```
 **Explication de la requête `$doctorsQuery`** :  
-  
-- `SELECT doctors.*` : on sélectionne toutes les colonnes `*` de la table `doctors`.
-- `FROM doctors` : nous indiquons que nous commençons par la table `doctors`.
+
+- `SELECT doctors.*, doctor_pictures.pathImg` : on sélectionne toutes les colonnes `*` de la table doctors et la colonne `pathImg` de la table `doctor_pictures`.
+- `FROM doctors` : on spécifie la table principale `doctors` à partir de laquelle récupérer les données.
+- `INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id` : on spécifie comment la table `doctor_pictures` doit être jointe à la table `doctors`. Un `INNER JOIN` récupère les lignes qui ont des valeurs correspondantes dans les 2 tables. La condition de jointure est que l'`id` dans la table `doctors` doit correspondre au `doctor_id` dans la table `doctor_pictures`.  
 
 **Fonction :**  
   
@@ -174,17 +178,24 @@ function findAllDatas($db, $sql)
 
 ### getSortedProducts($db, $orderBy)
 
-La fonction `getSortedProducts` a pour but de récupérer les produits à partir de la base de données, en les triant par prix (soit en ordre croissant, soit en ordre décroissant) en fonction de la préférence de l’utilisateur. Elle prend en entrée une connexion à une base de données `$db` et la préférence de tri `$orderBy` (soit `ASC` pour croissant, soit `DESC` pour décroissant).
+La fonction `getSortedProducts` a pour but de récupérer les produits à partir de la base de données, en les triant par prix (soit en ordre croissant, soit en ordre décroissant) en fonction de la préférence de l'utilisateur. Elle prend en entrée une connexion à une base de données `$db` et la préférence de tri `$orderBy` (soit `ASC` pour croissant, soit `DESC` pour décroissant).
 
 ```php
 // Fonction pour récupérer les produits triés en fonction de la préférence de l'utilisateur
 function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
-    $productsQuery = "SELECT products.*, product_category.category_name
-                    FROM products
-                    INNER JOIN product_category ON products.product_category_id = product_category.id
-                    ORDER BY product_price $orderBy";
+    $productsQuery = "SELECT 
+                      products.product_title, 
+                      products.product_description, 
+                      products.product_price, 
+                      product_category.category_name, 
+                      product_pictures.pathImg 
+                      FROM products 
+                      INNER JOIN product_category ON products.product_category_id = product_category.id
+                      INNER JOIN product_pictures ON product_pictures.product_id = products.id
+                      ORDER BY product_price $orderBy;
+                     ";
 
     // Appel de la fonction findAllDatas pour exécuter la requête et renvoyer les résultats
     return findAllDatas($db, $productsQuery);
@@ -192,11 +203,17 @@ function getSortedProducts($db, $orderBy)
 ```
 **Explication de la requête `$productsQuery` :**
 
+- `SELECT products.product_title, products.product_description, products.product_price, product_category.category_name, product_pictures.pathImg` : on spécifie les colonnes à récupérer. On récupère le titre du produit, la description, le prix, le nom de la catégorie du produit et le chemin de l'image du produit.
+- `FROM products` : on spécifie la table principale `products` à partir de laquelle récupérer les données.
+- `INNER JOIN product_category ON products.product_category_id = product_category.id` : on spécifie comment la table `product_category` doit être jointe à la table `products`. Un `INNER JOIN` récupère les lignes qui ont des valeurs correspondantes dans les 2 tables. La condition de jointure est que le `product_category_id` dans la table `products` doit correspondre à l'`id` dans la table `product_category`.
+- `INNER JOIN product_pictures ON product_pictures.product_id = products.id` : on spécifie comment la table `product_pictures` doit être jointe à la table `products`. La condition de jointure est que le `product_id` dans la table `product_pictures` doit correspondre à l'`id` dans la table `products`.
+
+
 - `SELECT products.*, product_category.category_name` : on sélectionne toutes les colonnes `*` de la table `products` et la colonne `category_name` de la table `product_category`.
 - `FROM products` : nous indiquons que nous commençons par la table `products`.
 - `INNER JOIN product_category` : on joint la table `product_category` à la table `products`. Un `INNER JOIN` retourne les lignes où il y a une correspondance dans les 2 tables.
 - `ON products.product_category_id = product_category.id` : on spécifie la condition de jointure. Nous joignons les 2 tables entre la colonne `product_category_id` de la table `products` et la colonne `id` de la table `product_category`.
-- `ORDER BY product_price $orderBy` : Trie les résultats par prix de produit (soit en ordre croissant, soit en ordre décroissant) en fonction de la préférence de tri spécifiée dans `$orderBy`.
+- `ORDER BY product_price $orderBy` : Trie les résultats par prix de produit (soit en ordre croissant, soit en ordre décroissant) en fonction de la préférence de tri spécifiée dans `$orderBy`, qui peut être `ASC` pour un ordre croissant ou `DESC` pour un ordre décroissant.
 
 ## header.fn.php
 
@@ -375,7 +392,7 @@ function generateNavLinks($db, $navName)
 - `FROM pages` : nous indiquons que nous commençons par la table `pages`.
 - `INNER JOIN nav_category` : on joint la table `nav_category` à la table `pages`. Un `INNER JOIN` retourne les lignes où il y a une correspondance dans les 2 tables.
 - `ON pages.nav_category_id = nav_category.id` : on spécifie la condition de jointure. Nous joignons les 2 tables, la colonne `nav_category_id` de la table `pages` et la colonne `id` de la table `nav_category`.
-- `WHERE nav_category.nav_name = :navName` : on ajoute une condition à la requête. Seules les lignes où le `nav_name` de la table `nav_category` est égal à la valeur de `:navName` (paramètre défini lors de l’exécution de la requête) seront retournées.
+- `WHERE nav_category.nav_name = :navName` : on ajoute une condition à la requête. Seules les lignes où le `nav_name` de la table `nav_category` est égal à la valeur de `:navName` (paramètre défini lors de l'exécution de la requête) seront retournées.
 
 > [!NOTE]
 > **Pourquoi nous utilisons `$navLinks[]` au lieu de `$navLinks`** :  

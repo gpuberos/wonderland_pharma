@@ -8,7 +8,16 @@ if (isset($_POST['sortBy']) && $_POST['sortBy'] == 'ASC') {
     $products = getSortedProducts($db, 'DESC');
 } else {
     // Si aucune préférence n'est spécifiée, récupérer tous les produits sans tri
-    $productsQuery = "SELECT products.*, product_category.category_name FROM products INNER JOIN product_category ON products.product_category_id = product_category.id";
+    $productsQuery = "SELECT 
+                      products.product_title, 
+                      products.product_description, 
+                      products.product_price, 
+                      product_category.category_name, 
+                      product_pictures.pathImg 
+                      FROM products 
+                      INNER JOIN product_category ON products.product_category_id = product_category.id
+                      INNER JOIN product_pictures ON product_pictures.product_id = products.id;
+                     ";
     $products = findAllDatas($db, $productsQuery);
 }
 
@@ -34,17 +43,17 @@ if (isset($_POST['sortBy']) && $_POST['sortBy'] == 'ASC') {
     </div>
 
     <div class="row row-cols-1 row-cols-md-4 row-gap-4">
-        <?php foreach ($products as $product) : ?>
+        <?php foreach ($products as $row) : ?>
             <div class="col">
                 <div class="card h-100 text-center rounded-0">
-                    <img src="<?= PRODUCTS_IMG_PATH . $product['product_pathimg'] ?>" class="card-img-top rounded-0" alt="$product['product_title'] ?>">
+                    <img src="<?= PRODUCTS_IMG_PATH . $row['pathImg'] ?>" class="card-img-top rounded-0" alt="$row['product_title'] ?>">
                     <div class="card-body">
-                        <h5 class="card-title"><?= $product['product_title'] ?></h5>
-                        <p><span class="badge rounded-pill text-bg-light"><?= $product['category_name'] ?></span></p>
-                        <p class="card-text"><?= $product['product_description'] ?></p>
+                        <h5 class="card-title"><?= $row['product_title'] ?></h5>
+                        <p><span class="badge rounded-pill text-bg-light"><?= $row['category_name'] ?></span></p>
+                        <p class="card-text"><?= $row['product_description'] ?></p>
                     </div>
                     <div class="card-footer pb-4">
-                        <p class="card-text"><strong>Prix : <?= $product['product_price'] ?> €</strong></p>
+                        <p class="card-text"><strong>Prix : <?= $row['product_price'] ?> €</strong></p>
                         <a href="#" class="btn bg-blue text-white">Acheter</a>
                     </div>
                 </div>
