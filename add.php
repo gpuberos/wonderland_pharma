@@ -43,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
         $sth = $db->prepare($sql);
 
-
         // Lie les paramètres à la requête SQL.
         $sth->bindParam(':product_name', $productName);
         $sth->bindParam(':product_description', $productDescription);
