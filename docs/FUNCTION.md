@@ -120,7 +120,7 @@ Dans la fonction `findAllDatas(param1, param2)`, on passe en premier paramètre 
 ```php
 <?php
 // La requête SQL est stockée dans la variable $doctorsQuery puis est passé en paramètre dans la fonctidisplayCards.
-$doctorsQuery = "SELECT doctors.*, doctor_pictures.pathImg 
+$doctorsQuery = "SELECT doctors.*, doctor_pictures.doctor_path_img 
                  FROM `doctors`
                  INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id;
                 ";
@@ -130,7 +130,7 @@ foreach ($doctors as $row) :
 ?>
     <div class="col">
         <div class="card h-100 text-center rounded-0">
-            <img src="<?= DOCTORS_IMG_PATH . $row['pathImg'] ?>" class="card-img-top rounded-0" alt="<?= $['doctor_name'] ?>">
+            <img src="<?= DOCTORS_IMG_PATH . $row['doctor_path_img'] ?>" class="card-img-top rounded-0" alt="<?= $['doctor_name'] ?>">
             <div class="card-body">
                 <h5 class="card-title"><?= $row['doctor_name'] ?></h5>
                 <p class="card-text"><?= $row['doctor_description'] ?></p>
@@ -141,7 +141,7 @@ foreach ($doctors as $row) :
 ```
 **Explication de la requête `$doctorsQuery`** :  
 
-- `SELECT doctors.*, doctor_pictures.pathImg` : on sélectionne toutes les colonnes `*` de la table doctors et la colonne `pathImg` de la table `doctor_pictures`.
+- `SELECT doctors.*, doctor_pictures.doctor_path_img` : on sélectionne toutes les colonnes `*` de la table doctors et la colonne `doctor_path_img` de la table `doctor_pictures`.
 - `FROM doctors` : on spécifie la table principale `doctors` à partir de laquelle récupérer les données.
 - `INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id` : on spécifie comment la table `doctor_pictures` doit être jointe à la table `doctors`. Un `INNER JOIN` récupère les lignes qui ont des valeurs correspondantes dans les 2 tables. La condition de jointure est que l'`id` dans la table `doctors` doit correspondre au `doctor_id` dans la table `doctor_pictures`.  
 
@@ -186,11 +186,11 @@ function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
     $productsQuery = "SELECT 
-                      products.product_title, 
+                      products.product_name, 
                       products.product_description, 
                       products.product_price, 
                       product_category.category_name, 
-                      product_pictures.pathImg 
+                      product_pictures.product_path_img 
                       FROM products 
                       INNER JOIN product_category ON products.product_category_id = product_category.id
                       INNER JOIN product_pictures ON product_pictures.product_id = products.id
@@ -203,7 +203,7 @@ function getSortedProducts($db, $orderBy)
 ```
 **Explication de la requête `$productsQuery` :**
 
-- `SELECT products.product_title, products.product_description, products.product_price, product_category.category_name, product_pictures.pathImg` : on spécifie les colonnes à récupérer. On récupère le titre du produit, la description, le prix, le nom de la catégorie du produit et le chemin de l'image du produit.
+- `SELECT products.product_name, products.product_description, products.product_price, product_category.category_name, product_pictures.product_path_img` : on spécifie les colonnes à récupérer. On récupère le titre du produit, la description, le prix, le nom de la catégorie du produit et le chemin de l'image du produit.
 - `FROM products` : on spécifie la table principale `products` à partir de laquelle récupérer les données.
 - `INNER JOIN product_category ON products.product_category_id = product_category.id` : on spécifie comment la table `product_category` doit être jointe à la table `products`. Un `INNER JOIN` récupère les lignes qui ont des valeurs correspondantes dans les 2 tables. La condition de jointure est que le `product_category_id` dans la table `products` doit correspondre à l'`id` dans la table `product_category`.
 - `INNER JOIN product_pictures ON product_pictures.product_id = products.id` : on spécifie comment la table `product_pictures` doit être jointe à la table `products`. La condition de jointure est que le `product_id` dans la table `product_pictures` doit correspondre à l'`id` dans la table `products`.

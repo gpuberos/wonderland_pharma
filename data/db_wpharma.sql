@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 12 fév. 2024 à 22:41
+-- Généré le : mar. 13 fév. 2024 à 08:57
 -- Version du serveur : 8.2.0
 -- Version de PHP : 8.2.13
 
@@ -82,7 +82,7 @@ INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES
 DROP TABLE IF EXISTS `doctor_pictures`;
 CREATE TABLE IF NOT EXISTS `doctor_pictures` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `pathImg` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `doctor_path_img` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `doctor_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `doctor_id` (`doctor_id`)
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `doctor_pictures` (
 -- Déchargement des données de la table `doctor_pictures`
 --
 
-INSERT INTO `doctor_pictures` (`id`, `pathImg`, `doctor_id`) VALUES
+INSERT INTO `doctor_pictures` (`id`, `doctor_path_img`, `doctor_id`) VALUES
 (1, 'alice-doctor.webp', 1),
 (2, 'madhatter-doctor.webp', 2),
 (3, 'caterpillar-doctor.webp', 3),
@@ -159,7 +159,7 @@ INSERT INTO `pages` (`id`, `page_title`, `page_meta_desc`, `page_meta_keywords`,
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE IF NOT EXISTS `products` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `product_title` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
+  `product_name` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   `product_description` text COLLATE utf8mb4_general_ci NOT NULL,
   `product_price` float NOT NULL,
   `product_category_id` int NOT NULL,
@@ -171,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 -- Déchargement des données de la table `products`
 --
 
-INSERT INTO `products` (`id`, `product_title`, `product_description`, `product_price`, `product_category_id`) VALUES
+INSERT INTO `products` (`id`, `product_name`, `product_description`, `product_price`, `product_category_id`) VALUES
 (1, 'Drink Me', 'Une potion qui vous fait rétrécir ou grandir selon la quantité que vous buvez. Attention à ne pas en abuser !', 9.99, 2),
 (2, 'Eat Me', 'Un gâteau qui vous fait changer de taille selon la part que vous mangez. Idéal pour explorer des endroits inaccessibles !', 12.99, 3),
 (3, 'Upelkuchen', 'Un biscuit qui vous fait changer de couleur selon la saveur que vous choisissez. Parfait pour vous camoufler ou vous amuser !', 14.99, 3),
@@ -212,7 +212,7 @@ INSERT INTO `product_category` (`id`, `category_name`) VALUES
 DROP TABLE IF EXISTS `product_pictures`;
 CREATE TABLE IF NOT EXISTS `product_pictures` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `pathImg` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `product_path_img` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `product_id` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
@@ -222,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `product_pictures` (
 -- Déchargement des données de la table `product_pictures`
 --
 
-INSERT INTO `product_pictures` (`id`, `pathImg`, `product_id`) VALUES
+INSERT INTO `product_pictures` (`id`, `product_path_img`, `product_id`) VALUES
 (1, 'drink_me.webp', 1),
 (2, 'eat_me.webp', 2),
 (3, 'upelkuchen.webp', 3),
@@ -241,7 +241,7 @@ INSERT INTO `product_pictures` (`id`, `pathImg`, `product_id`) VALUES
 DROP TABLE IF EXISTS `sections`;
 CREATE TABLE IF NOT EXISTS `sections` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `section_title` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
+  `section_name` varchar(110) COLLATE utf8mb4_general_ci NOT NULL,
   `section_description` text COLLATE utf8mb4_general_ci NOT NULL,
   `section_category_id` int NOT NULL,
   PRIMARY KEY (`id`),
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `sections` (
 -- Déchargement des données de la table `sections`
 --
 
-INSERT INTO `sections` (`id`, `section_title`, `section_description`, `section_category_id`) VALUES
+INSERT INTO `sections` (`id`, `section_name`, `section_description`, `section_category_id`) VALUES
 (1, 'Présentation', 'Bienvenue au laboratoire pharmaceutique Wonderland Pharma, un établissement unique où la science et la magie se rencontrent pour créer des médicaments extraordinaires. Notre équipe dévouée de chercheurs et d\'alchimistes travaille sans relâche pour développer des formulations révolutionnaires qui permettent à nos clients de changer de taille, de couleur, ou même d\'acquérir des pouvoirs magiques. Inspiré par l\'univers fantastique de Lewis Carroll, notre laboratoire est déterminé à repousser les limites de la réalité et à offrir des expériences pharmacologiques inédites. Que vous cherchiez à explorer de nouveaux horizons dimensionnels ou à embrasser votre côté fantastique, notre gamme de produits innovants est conçue pour émerveiller et surprendre. Rejoignez-nous dans cette aventure extraordinaire où la science et la magie convergent pour créer des solutions pharmaceutiques uniques au pays des rêves et de l\'émerveillement.', 1),
 (2, 'Contactez-nous', 'Vous avez des questions, n\'hésitez pas à nous contacter nous nous ferons un plaisir de vous aider.', 2);
 

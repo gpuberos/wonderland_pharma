@@ -28,7 +28,7 @@ function displaySection($db, $sectionCategory)
             // Le titre et le contenu sont récupérés à partir du tableau $section.
             echo '
             <section class="mb-5">
-                <h2 class="text-center fs-1 mb-4">' . $row['section_title'] . '</h2>
+                <h2 class="text-center fs-1 mb-4">' . $row['section_name'] . '</h2>
                 <p class="fs-22">' . $row['section_description'] . '</p>
             </section>
             ';
@@ -66,11 +66,11 @@ function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
     $productsQuery = "SELECT 
-                      products.product_title, 
+                      products.product_name, 
                       products.product_description, 
                       products.product_price, 
                       product_category.category_name, 
-                      product_pictures.pathImg 
+                      product_pictures.product_path_img 
                       FROM products 
                       INNER JOIN product_category ON products.product_category_id = product_category.id
                       INNER JOIN product_pictures ON product_pictures.product_id = products.id
