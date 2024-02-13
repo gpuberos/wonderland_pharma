@@ -24,11 +24,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         // Récupère les valeurs du formulaire à partir de la superglobale $_POST.
         // Ajout de htmlspecialchars() pour échapper les caractères spéciaux et ainsi se protéger contre certaine attaques XSS
-        $productName = htmlspecialchars(strip_tags($_POST['product_name']));
-        $productDescription = htmlspecialchars(strip_tags($_POST['product_description']));
-        $productPrice = htmlspecialchars(strip_tags($_POST['product_price']));
-        $productPathImg = htmlspecialchars(strip_tags($_POST['product_path_img']));
-        $productCategoryId = htmlspecialchars(strip_tags($_POST['product_category_id']));
+        $productName = htmlspecialchars($_POST['product_name']);
+        $productDescription = htmlspecialchars($_POST['product_description']);
+        $productPrice = htmlspecialchars($_POST['product_price']);
+        $productPathImg = htmlspecialchars($_POST['product_path_img']);
+        $productCategoryId = htmlspecialchars($_POST['product_category_id']);
         $doctorId = htmlspecialchars($_POST['doctor_id']);
 
         // Démarre une nouvelle transaction
