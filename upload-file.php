@@ -35,15 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Extensions de fichiers autorisées
         $allowedfileExtensions = ['jpg', 'jpeg', 'gif', 'webp', 'png', 'svg'];
 
+        // Vérifie si l'extension du fichier est dans la liste des extensions autorisées
+        // La fonction in_array() est une fonction intégrée en PHP qui vérifie si une valeur existe dans un tableau. 
+        // Elle retourne true si la valeur est trouvée dans le tableau sinon false.
+        // https://www.php.net/manual/fr/function.in-array
         if (in_array($fileExtension, $allowedfileExtensions)) {
+            // Définit le répertoire de destination pour le fichier uploadé
             $uploadFileDir = PRODUCTS_IMG_PATH;
+
+            // Crée le chemin complet du fichier de destination en ajoutant le nom du nouveau fichier au répertoire de destination
             $destPath = $uploadFileDir . $newFileName;
 
+            // Déplace le fichier uploadé vers le répertoire de destination (PRODUCTS_IMG_PATH)
+            // move_uploaded_file() vérifie la validité du fichier téléchargé pour s'assurer qu'il a été téléchargé via le formulaire POST
+            // https://www.php.net/manual/fr/function.move-uploaded-file.php
             move_uploaded_file($fileTmpPath, $destPath);
 
+            // Affiche un message indiquant que le fichier a été uploadé avec succès
             echo "Le fichier a été uploadé avec succès !";
 
         } else {
+            // Si l'extension du fichier n'est pas dans la liste des extensions autorisées, affiche un message d'erreur
             echo "Erreur dans l'upload";
         }
     }
