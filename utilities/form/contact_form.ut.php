@@ -50,10 +50,10 @@ if ($prenom = isset($_GET['prenom'])) {
 }
 
 // Opérateur Ternaire
-$nom = isset($_GET['nom']) ? htmlspecialchars($_GET['nom']) : null;
+$nom = isset($_GET['nom']) ? htmlspecialchars(strip_tags($_GET['nom'])) : null;
 $email = isset($_GET['email']) ? filter_var(($_GET['email']), FILTER_SANITIZE_EMAIL) : null;
-$sujet = isset($_GET['sujet']) ? htmlspecialchars($_GET['sujet']) : null;
-$message = isset($_GET['message']) ? htmlspecialchars($_GET['message']) : null;
+$sujet = isset($_GET['sujet']) ? htmlspecialchars(strip_tags($_GET['sujet'])) : null;
+$message = isset($_GET['message']) ? htmlspecialchars(strip_tags($_GET['message'])) : null;
 
 // Si on utilise ce code il affichera un warning
 // $prenom = $_GET['prenom'];
