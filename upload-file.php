@@ -81,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body class="d-flex flex-column vh-100">
     <main class="flex-grow-1 py-4">
+        
         <div class="container py-4">
             <form action="#" method="POST" class="col-6 mx-auto" enctype="multipart/form-data">
                 <fieldset>
