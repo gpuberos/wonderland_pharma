@@ -83,3 +83,10 @@ function generateNavLinks($db, $navName)
     // Retour du tableau des liens de navigation
     return $navLinks;
 }
+
+function formatUrl($url)
+{
+    // Remplacez tous les '/' par DIRECTORY_SEPARATOR
+    $formattedUrl = str_replace('/', DIRECTORY_SEPARATOR, $url);
+    return $formattedUrl;
+}

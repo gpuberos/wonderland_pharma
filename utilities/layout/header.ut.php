@@ -1,22 +1,22 @@
 <?php
 
 // Inclusion du fichier de configuration des chemins d'accès (Images)
-require_once dirname(dirname(__DIR__)) . '/config/path.cfg.php';
+require_once dirname(__DIR__, 2) . '/config/path.cfg.php';
 
 // Inclusion du fichier de configuration de la base de données
-require_once dirname(dirname(__DIR__)) . '/config/database.cfg.php';
+require_once dirname(__DIR__, 2) . '/config/database.cfg.php';
 
 // Inclusion du fichier contenant les fonctions relatives à la base de données
-require_once dirname(dirname(__DIR__)) . '/function/database.fn.php';
+require_once dirname(__DIR__, 2) . '/function/database.fn.php';
 
 // Appel de la fonction getPDOlink() pour obtenir un lien vers la base de données
 $db = getPDOlink($config);
 
 // Inclusion du fichier contenant les fonctions nécessaire à l'en-tête
-require_once dirname(dirname(__DIR__)) . '/function/header.fn.php';
+require_once dirname(__DIR__, 2) . '/function/header.fn.php';
 
 // Inclusion du fichier contenant les fonctions nécessaire au frontend
-require_once dirname(dirname(__DIR__)) . '/function/frontend.fn.php';
+require_once dirname(__DIR__, 2) . '/function/frontend.fn.php';
 
 // Appel de la fonction getPageInfo() pour obtenir les informations relatives à la page dans la base de données
 $pageInfo = getPageInfo($db);
@@ -35,7 +35,7 @@ $pageInfo = getPageInfo($db);
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <!-- CSS Custom -->
-    <link rel="stylesheet" href="<?= CSS_PATH ?>/styles.css">
+    <link rel="stylesheet" href="<?= formatUrl(CSS_PATH) ?>/styles.css">
 
     <title><?= $pageInfo['page_title'] ?></title>
     <meta name="description" content="<?= $pageInfo['page_meta_desc'] ?>">
@@ -44,7 +44,7 @@ $pageInfo = getPageInfo($db);
 
 <body id="<?= $pageInfo['page_bodyId'] ?>" class="d-flex flex-column vh-100">
     <header>
-        <?php require_once dirname(dirname(__DIR__)) . '/utilities/nav/header_nav.ut.php'; ?>
+        <?php require_once dirname(__DIR__, 2) . '/utilities/nav/header_nav.ut.php'; ?>
     </header>
 
     <main class="flex-grow-1 py-4">

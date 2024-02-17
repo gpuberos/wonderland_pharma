@@ -7,7 +7,7 @@
         <div class="wave z-3 opacity-75" id="wave4"></div>
     </div>
 
-    <?php require_once dirname(dirname(__DIR__)) . '/utilities/nav/footer_nav.ut.php'; ?>
+    <?php require_once dirname(__DIR__, 2) . '/utilities/nav/footer_nav.ut.php'; ?>
 
     <p class="text-center text-white">
         <!-- La fonction PHP Date est utilisé pour afficher l’année en cours en PHP. Y = Année -->
