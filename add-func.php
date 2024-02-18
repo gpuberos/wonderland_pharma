@@ -21,84 +21,95 @@ $doctors = findAllDatas($db, $doctorQuery);
 
 // Vérifie si la méthode de la requête est POST. S'execute uniquement quand le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        // Récupère les valeurs du formulaire à partir de la superglobale $_POST.
-        // Ajout de htmlspecialchars() pour échapper les caractères spéciaux et ainsi se protéger contre certaine attaques XSS
-        $productName = htmlspecialchars($_POST['product_name']);
-        $productDescription = htmlspecialchars($_POST['product_description']);
-        $productPrice = htmlspecialchars($_POST['product_price']);
-        $productCategoryId = htmlspecialchars($_POST['product_category_id']);
-        $doctorId = htmlspecialchars($_POST['doctor_id']);
+    // Récupère les valeurs du formulaire à partir de la superglobale $_POST.
+    // Ajout de htmlspecialchars() pour échapper les caractères spéciaux et ainsi se protéger contre certaine attaques XSS
+    $productName = htmlspecialchars($_POST['product_name']);
+    $productDescription = htmlspecialchars($_POST['product_description']);
+    $productPrice = htmlspecialchars($_POST['product_price']);
+    $productCategoryId = htmlspecialchars($_POST['product_category_id']);
+    $doctorId = htmlspecialchars($_POST['doctor_id']);
 
-        // Démarre une nouvelle transaction
-        $db->beginTransaction();
+    // Démarre une nouvelle transaction
+    $db->beginTransaction();
 
-        // Insère le nouveau produit dans la table 'products'
-        $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
+    // Insère le nouveau produit dans la table 'products'
+    $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
                 VALUES (:product_name, :product_description, :product_price, :product_category_id)";
 
-        $sth = $db->prepare($sql);
+    // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+    $params = [
+        ':product_name' => $productName,
+        ':product_description' => $productDescription,
+        ':product_price' => $productPrice,
+        ':product_category_id' => $productCategoryId
+    ];
 
-        // Lie les paramètres à la requête SQL.
-        $sth->bindParam(':product_name', $productName);
-        $sth->bindParam(':product_description', $productDescription);
-        $sth->bindParam(':product_price', $productPrice);
-        $sth->bindParam(':product_category_id', $productCategoryId);
+    // Execute de la requête préparée via la fonction executeQuery
+    $sth = executeQuery($db, $sql, $params);
 
-        // Execute la requête préparée
-        $sth->execute();
+    // Si la requête a échoué, envoie un message d'erreur et annule la transaction en cours et toutes les modifications apportées à la base de données.
+    if ($sth === false) {
+        // Annulation de la transaction
+        $db->rollBack();
+        return;
+    }
 
-        // Récupère l'ID du produit qui vient d'être inséré
-        $productId = $db->lastInsertId();
+    // Récupère l'ID du produit qui vient d'être inséré
+    $productId = $db->lastInsertId();
 
-        // Upload de l'image
-        $productPathImg = uploadImageFile('product_path_img', PRODUCTS_IMG_PATH);
+    // Upload de l'image
+    $productPathImg = uploadImageFile('product_path_img', PRODUCTS_IMG_PATH);
 
-        // Vérifier s'il y a eu une erreur lors du téléchargement de l'image
-        if ($productPathImg !== null) {
-            // Insère la nouvelle image de produit dans la table 'product_pictures'
-            $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) VALUES (:product_path_img, :product_id)";
+    // Vérifier s'il y a eu une erreur lors du téléchargement de l'image
+    if ($productPathImg !== null) {
+        // Insère la nouvelle image de produit dans la table 'product_pictures'
+        $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) VALUES (:product_path_img, :product_id)";
 
-            // Préparation de la requête SQL pour l'exécution.
-            $sth = $db->prepare($sql);
+        // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+        $params = [
+            ':product_path_img' => $productPathImg,
+            ':product_id' => $productId
+        ];
 
-            // Lie les paramètres à la requête SQL.
-            $sth->bindParam(':product_path_img', $productPathImg);
-            $sth->bindParam(':product_id', $productId);
+        // Execute de la requête préparée via la fonction executeQuery
+        $sth = executeQuery($db, $sql, $params);
 
-            // Execute la requête préparée
-            $sth->execute();
-
-        } else {
-            // Afficher un message d'erreur
-            echo "Une erreur s'est produite lors du téléchargement de l'image.";
+        // Si la requête a échoué, envoie un message d'erreur et annule la transaction en cours et toutes les modifications apportées à la base de données.
+        if ($sth === false) {
+            // Annulation de la transaction
+            $db->rollBack();
+            return;
         }
 
-        // Insère le nouveau lien entre le médecin et le produit dans la table 'doctors_products'
-        $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES (:doctor_id, :product_id)";
-
-        // Préparation de la requête SQL pour l'exécution.
-        $sth = $db->prepare($sql);
-
-        // Lie les paramètres à la requête SQL.
-        $sth->bindParam(':doctor_id', $doctorId);
-        $sth->bindParam(':product_id', $productId);
-
-        // Execute la requête préparée
-        $sth->execute();
-
-        // Valide la transaction en cours et rends permanent toutes les modifications apportées à la base de données depuis le dernier appel à beginTransaction().
-        $db->commit();
-
-        // Affiche le message de succès si la transaction a réussi.
-        echo "Produit ajouté avec succès !";
-    } catch (PDOException $e) {
-        // Si une erreur se produit, on annule la transaction en cours et toutes les modifications apportées à la base de données
-        $db->rollBack();
-
-        // Puis on affiche un message d'erreur.
-        echo "Erreur lors de l'ajout du produit : " . $e->getMessage();
+    } else {
+        // Afficher un message d'erreur
+        echo "Une erreur s'est produite lors du téléchargement de l'image.";
     }
+
+    // Insère le nouveau lien entre le médecin et le produit dans la table 'doctors_products'
+    $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES (:doctor_id, :product_id)";
+
+    // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+    $params = [
+        ':doctor_id' => $doctorId,
+        ':product_id' => $productId
+    ];
+
+    // Execute de la requête préparée via la fonction executeQuery
+    $sth = executeQuery($db, $sql, $params);
+
+    // Si la requête a échoué, envoie un message d'erreur et annule la transaction en cours et toutes les modifications apportées à la base de données.
+    if ($sth === false) {
+        // Annulation de la transaction
+        $db->rollBack();
+        return;
+    }
+
+    // Valide la transaction en cours et rends permanent toutes les modifications apportées à la base de données depuis le dernier appel à beginTransaction().
+    $db->commit();
+
+    // Affiche le message de succès si la transaction a réussi.
+    echo "Produit ajouté avec succès !";
 }
 
 ?>

@@ -54,7 +54,7 @@ function uploadImageFile($inputName, $destinationPath)
             // https://www.php.net/manual/fr/function.move-uploaded-file.php
             if (move_uploaded_file($fileTmpPath, $destPath)) {
                 // Si le fichier a été déplacé avec succès, on retourne le nom du fichier.
-                return $destPath;
+                return $newFileName;
             } else {
                 // Si le fichier n'a pas pu être déplacé, on retourne null.
                 return null;

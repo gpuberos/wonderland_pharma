@@ -52,28 +52,29 @@ function findAllDatas($db, $sql)
 function executeQuery($db, $sql, $params)
 {
     try {
+    // Préparation de la requête SQL pour l'exécution.
+    // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
+    // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
+    $sth = $db->prepare($sql);
 
-        // Préparation de la requête SQL pour l'exécution.
-        // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
-        // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
-        $sth = $db->prepare($sql);
-        
-        // Parcours de chaque paramètre dans le tableau $params.
-        foreach ($params as $param => $value) {
-            // Liaison du paramètre à la requête SQL
-            $sth->bindParam($param, $value);
-        }
-        
-        // Execute la requête préparée
-        $sth->execute();
-        
-        // Retourne l'objet 'statement' ($sth) si la requête a réussi.
-        return $sth;
+    // Parcours de chaque paramètre dans le tableau $params.
+    // Le & avant $value signifie que nous passons $value par référence. 
+    // Cela signifie que nous donnons à la fonction un lien vers la variable originale, et non une copie de sa valeur.
+    foreach ($params as $param => &$value) {
+        // Liaison du paramètre à la requête SQL
+        $sth->bindParam($param, $value);
+    }
 
+    // Execute la requête préparée
+    $sth->execute();
+
+    // Retourne l'objet 'statement' ($sth) si la requête a réussi.
+    return $sth;
+    
     } catch (PDOException $e) {
         // Affiche le message d'erreur à l'utilisateur
         echo "Erreur : " . $e->getMessage();
-
+        
         // Retourne false si une erreur s'est produite.
         return false;
     }
