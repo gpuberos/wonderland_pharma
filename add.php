@@ -9,7 +9,6 @@ require_once __DIR__ . '/function/database.fn.php';
 $db = getPDOlink($config);
 
 require_once __DIR__ . '/function/header.fn.php';
-require_once __DIR__ . '/function/frontend.fn.php';
 require_once __DIR__ . '/function/upload.fn.php';
 
 // Récupère toutes les catégories de produits.
