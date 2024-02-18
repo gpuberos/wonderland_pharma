@@ -72,7 +72,7 @@ function executeQuery($db, $sql, $params)
 
     } catch (PDOException $e) {
         // Affiche le message d'erreur à l'utilisateur
-        echo "Erreur lors de l'ajout du produit : " . $e->getMessage();
+        echo "Erreur : " . $e->getMessage();
 
         // Retourne false si une erreur s'est produite.
         return false;
