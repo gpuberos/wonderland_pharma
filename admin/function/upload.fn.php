@@ -47,7 +47,7 @@ function uploadImageFile($inputName, $destinationPath)
             // Si c'est le cas, on prépare le chemin de destination pour uploader le fichier.
             // On utilise la fonction formatLocalFilePath pour s'assurer que le chemin est correctement formaté pour le système d'exploitation actuel.
             // On ajoute le nouveau nom du fichier à ce chemin.
-            $destPath = formatLocalFilePath($destinationPath) . $newFileName;
+            $destPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . formatLocalFilePath($destinationPath) . $newFileName;
 
             // On tente de déplacer le fichier uploadé vers le répertoire de destination
             // La fonction move_upload_file vérifie la validité du fichier en s'assurant qu'il a été uploadé via un formulaire POST (HTTP POST).

@@ -68,3 +68,12 @@ if ($_FILES[$inputName]['error'] !== UPLOAD_ERR_OK) {
 
 **Gestion d'erreur** :
 - https://www.php.net/manual/fr/function.error-log.php
+
+
+
+uniqid() génère un id aléatoire
+- https://www.php.net/manual/fr/function.uniqid.php
+
+@mkdir pour créer un dossier
+CHMOD
+- http://www.man-linux-magique.net/man1/mkdir.html
