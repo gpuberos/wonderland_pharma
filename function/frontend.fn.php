@@ -39,43 +39,21 @@ function displaySection($db, $sectionCategory)
     }
 }
 
-// Fonction qui récupère tous les résultats de la base de données.
-function findAllDatas($db, $sql)
-{
-    // Prépare la requête SQL pour l'exécution.
-    // La méthode prepare() est utilisée pour préparer la requête SQL pour l'exécution.
-    // Elle retourne un objet PDOStatement qui est stocké dans la variable $sth.
-    $sth = $db->prepare($sql);
-
-    // Exécute la requête SQL.
-    // La méthode execute() est utilisée pour exécuter la requête SQL préparée.
-    $sth->execute();
-
-    // Récupère tous les résultats de la requête SQL et les stocke dans $result.
-    // La méthode fetchAll() est utilisée pour récupérer tous les résultats de la requête SQL.
-    // Elle retourne un tableau associatif de tous les résultats qui sont stockés dans la variable $result.
-    $result = $sth->fetchAll();
-
-    // Retourne les résultats récupérés.
-    // La fonction retourne le tableau associatif $result qui contient tous les résultats récupérés de la base de données.
-    return $result;
-}
-
 // Fonction pour récupérer les produits triés en fonction de la préférence de l'utilisateur
 function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
     $productsQuery = "SELECT 
-                      products.product_name, 
-                      products.product_description, 
-                      products.product_price, 
-                      product_category.category_name, 
-                      product_pictures.product_path_img 
-                      FROM products 
-                      INNER JOIN product_category ON products.product_category_id = product_category.id
-                      INNER JOIN product_pictures ON product_pictures.product_id = products.id
-                      ORDER BY product_price $orderBy;
-                     ";
+                    products.product_name, 
+                    products.product_description, 
+                    products.product_price, 
+                    product_category.category_name, 
+                    product_pictures.product_path_img 
+                    FROM products 
+                    INNER JOIN product_category ON products.product_category_id = product_category.id
+                    INNER JOIN product_pictures ON product_pictures.product_id = products.id
+                    ORDER BY product_price $orderBy;
+                    ";
     
     // Appel de la fonction findAllDatas pour exécuter la requête et renvoyer les résultats
     return findAllDatas($db, $productsQuery);

@@ -53,14 +53,15 @@ function uploadImageFile($inputName, $destinationPath)
             // La fonction move_upload_file vérifie la validité du fichier en s'assurant qu'il a été uploadé via un formulaire POST (HTTP POST).
             // https://www.php.net/manual/fr/function.move-uploaded-file.php
             if (move_uploaded_file($fileTmpPath, $destPath)) {
-                // Si le fichier a été déplacé avec succès, on retourne une message de succès.
-                return "Le fichier a été uploadé avec succès !";
+                // Si le fichier a été déplacé avec succès, on retourne le nom du fichier.
+                return $destPath;
             } else {
-                // Si le fichier n'a pas pu être déplacé, on retourne un message d'erreur.
-                return "Erreur lors du déplacement du fichier vers le répertoire de destination.";
+                // Si le fichier n'a pas pu être déplacé, on retourne null.
+                return null;
             }
         }
+    } else {
+        // Si Une erreur inattendue s'est produite lors du téléchargement du fichier, on retourne null.
+        return null;
     }
-
-    return "Une erreur inattendue s'est produite lors du téléchargement du fichier.";
 }

@@ -9,15 +9,16 @@ if (isset($_POST['sortBy']) && $_POST['sortBy'] == 'ASC') {
 } else {
     // Si aucune préférence n'est spécifiée, récupérer tous les produits sans tri
     $productsQuery = "SELECT 
-                      products.product_name, 
-                      products.product_description, 
-                      products.product_price, 
-                      product_category.category_name, 
-                      product_pictures.product_path_img 
-                      FROM products 
-                      INNER JOIN product_category ON products.product_category_id = product_category.id
-                      INNER JOIN product_pictures ON product_pictures.product_id = products.id;
-                     ";
+                    products.product_name, 
+                    products.product_description, 
+                    products.product_price, 
+                    product_category.category_name, 
+                    product_pictures.product_path_img 
+                    FROM products 
+                    INNER JOIN product_category ON products.product_category_id = product_category.id
+                    INNER JOIN product_pictures ON product_pictures.product_id = products.id;
+                    ";
+
     $products = findAllDatas($db, $productsQuery);
 }
 

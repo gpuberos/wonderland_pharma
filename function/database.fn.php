@@ -25,3 +25,56 @@ function getPDOlink($config)
         exit('Erreur de connexion à la base de données : ' . $e->getMessage());
     }
 }
+
+// Fonction qui récupère tous les résultats de la base de données.
+function findAllDatas($db, $sql)
+{
+    // Prépare la requête SQL pour l'exécution.
+    // La méthode prepare() est utilisée pour préparer la requête SQL pour l'exécution.
+    // Elle retourne un objet PDOStatement qui est stocké dans la variable $sth.
+    $sth = $db->prepare($sql);
+
+    // Exécute la requête SQL.
+    // La méthode execute() est utilisée pour exécuter la requête SQL préparée.
+    $sth->execute();
+
+    // Récupère tous les résultats de la requête SQL et les stocke dans $result.
+    // La méthode fetchAll() est utilisée pour récupérer tous les résultats de la requête SQL.
+    // Elle retourne un tableau associatif de tous les résultats qui sont stockés dans la variable $result.
+    $result = $sth->fetchAll();
+
+    // Retourne les résultats récupérés.
+    // La fonction retourne le tableau associatif $result qui contient tous les résultats récupérés de la base de données.
+    return $result;
+}
+
+// Fonction qui exécute une requête SQL préparée avec des paramètres liés.
+function executeQuery($db, $sql, $params)
+{
+    try {
+
+        // Préparation de la requête SQL pour l'exécution.
+        // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
+        // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
+        $sth = $db->prepare($sql);
+        
+        // Parcours de chaque paramètre dans le tableau $params.
+        foreach ($params as $param => $value) {
+            // Liaison du paramètre à la requête SQL
+            $sth->bindParam($param, $value);
+        }
+        
+        // Execute la requête préparée
+        $sth->execute();
+        
+        // Retourne l'objet 'statement' ($sth) si la requête a réussi.
+        return $sth;
+
+    } catch (PDOException $e) {
+        // Affiche le message d'erreur à l'utilisateur
+        echo "Erreur lors de l'ajout du produit : " . $e->getMessage();
+
+        // Retourne false si une erreur s'est produite.
+        return false;
+    }
+}

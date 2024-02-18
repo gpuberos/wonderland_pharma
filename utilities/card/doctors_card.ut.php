@@ -5,9 +5,10 @@
             <?php
             // La requête SQL est stockée dans la variable $doctorsQuery puis est passé en paramètre dans la fonction displayCards.
             $doctorsQuery = "SELECT doctors.*, doctor_pictures.doctor_path_img 
-                             FROM `doctors`
-                             INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id;
+                            FROM `doctors`
+                            INNER JOIN doctor_pictures ON doctors.id = doctor_pictures.doctor_id;
                             ";
+
             $doctors = findAllDatas($db, $doctorsQuery);
 
             foreach ($doctors as $row) :

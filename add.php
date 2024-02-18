@@ -10,6 +10,7 @@ $db = getPDOlink($config);
 
 require_once __DIR__ . '/function/header.fn.php';
 require_once __DIR__ . '/function/frontend.fn.php';
+require_once __DIR__ . '/function/upload.fn.php';
 
 // Récupère toutes les catégories de produits.
 $productCategoryQuery = "SELECT `product_category`.* FROM `product_category`";
@@ -21,78 +22,90 @@ $doctors = findAllDatas($db, $doctorQuery);
 
 // Vérifie si la méthode de la requête est POST. S'execute uniquement quand le formulaire est soumis
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        // Récupère les valeurs du formulaire à partir de la superglobale $_POST.
-        // Ajout de htmlspecialchars() pour échapper les caractères spéciaux et ainsi se protéger contre certaine attaques XSS
-        $productName = htmlspecialchars($_POST['product_name']);
-        $productDescription = htmlspecialchars($_POST['product_description']);
-        $productPrice = htmlspecialchars($_POST['product_price']);
-        $productPathImg = htmlspecialchars($_POST['product_path_img']);
-        $productCategoryId = htmlspecialchars($_POST['product_category_id']);
-        $doctorId = htmlspecialchars($_POST['doctor_id']);
 
-        // Démarre une nouvelle transaction
-        $db->beginTransaction();
+    // Récupération des valeurs du formulaire à partir de la superglobale $_POST.
+    // Nettoyage des valeurs à l'aide de htmlspecialchars() pour échapper les caractères spéciaux et ainsi se protéger contre certaine attaques XSS
+    $productName = htmlspecialchars($_POST['product_name']);
+    $productDescription = htmlspecialchars($_POST['product_description']);
+    $productPrice = htmlspecialchars($_POST['product_price']);
+    $productCategoryId = htmlspecialchars($_POST['product_category_id']);
+    $doctorId = htmlspecialchars($_POST['doctor_id']);
 
-        // Insère le nouveau produit dans la table 'products'
-        $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
-                VALUES (:product_name, :product_description, :product_price, :product_category_id)";
+    // Démarre une nouvelle transaction
+    $db->beginTransaction();
 
-        // Préparation de la requête SQL pour l'exécution.
-        // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
-        // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
-        $sth = $db->prepare($sql);
+    // Préparation de la requête SQL pour insérer le nouveau produit dans la table 'products'
+    $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
+            VALUES (:product_name, :product_description, :product_price, :product_category_id)";
 
-        // Lie les paramètres à la requête SQL.
-        $sth->bindParam(':product_name', $productName);
-        $sth->bindParam(':product_description', $productDescription);
-        $sth->bindParam(':product_price', $productPrice);
-        $sth->bindParam(':product_category_id', $productCategoryId);
+    // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+    $params = [
+        ':product_name' => $productName,
+        ':product_description' => $productDescription,
+        ':product_price' => $productPrice,
+        ':product_category_id' => $productCategoryId
+    ];
 
-        // Execute la requête préparée
-        $sth->execute();
+    // Execute de la requête préparée via la fonction executeQuery
+    $sth = executeQuery($db, $sql, $params);
 
-        // Récupère l'ID du produit qui vient d'être inséré
-        $productId = $db->lastInsertId();
-
-        // Insère la nouvelle image de produit dans la table 'product_pictures'
-        $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) VALUES (:product_path_img, :product_id)";
-
-        // Préparation de la requête SQL pour l'exécution.
-        $sth = $db->prepare($sql);
-
-        // Lie les paramètres à la requête SQL.
-        $sth->bindParam(':product_path_img', $productPathImg);
-        $sth->bindParam(':product_id', $productId);
-
-        // Execute la requête préparée
-        $sth->execute();
-
-        // Insère le nouveau lien entre le médecin et le produit dans la table 'doctors_products'
-        $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES (:doctor_id, :product_id)";
-
-        // Préparation de la requête SQL pour l'exécution.
-        $sth = $db->prepare($sql);
-
-        // Lie les paramètres à la requête SQL.
-        $sth->bindParam(':doctor_id', $doctorId);
-        $sth->bindParam(':product_id', $productId);
-
-        // Execute la requête préparée
-        $sth->execute();
-
-        // Valide la transaction en cours et rends permanent toutes les modifications apportées à la base de données depuis le dernier appel à beginTransaction().
-        $db->commit();
-
-        // Affiche le message de succès si la transaction a réussi.
-        echo "Produit ajouté avec succès !";
-    } catch (PDOException $e) {
-        // Si une erreur se produit, on annule la transaction en cours et toutes les modifications apportées à la base de données
+    // Si la requête a échoué, envoie un message d'erreur et annule la transaction en cours et toutes les modifications apportées à la base de données.
+    if ($sth === false) {
+        // Annulation de la transaction
         $db->rollBack();
-
-        // Puis on affiche un message d'erreur.
-        echo "Erreur lors de l'ajout du produit : " . $e->getMessage();
+        return;
     }
+
+    // Récupère l'ID du produit qui vient d'être inséré
+    $productId = $db->lastInsertId();
+
+    // Téléchargement de l'image du produit
+    $productPathImg = uploadImageFile('product_path_img', PRODUCTS_IMG_PATH);
+
+    // Vérifier s'il y a eu une erreur lors du téléchargement de l'image
+    if ($productPathImg !== null) {
+        // Préparation de la requête SQL pour insérer une nouvelle image de produit dans la table 'product_pictures'
+        $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) 
+                VALUES (:product_path_img, :product_id)";
+
+        // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+        $params = [
+            ':product_path_img' => $productPathImg,
+            ':product_id' => $productId
+        ];
+
+        // Execute de la requête préparée via la fonction executeQuery
+        $sth = executeQuery($db, $sql, $params);
+
+        // Vérification si la requête a réussi
+        if ($sth === false) {
+            // Annulation de la transaction
+            $db->rollBack();
+            return;
+        }
+    } else {
+        // Afficher un message d'erreur
+        echo "Une erreur s'est produite lors du téléchargement de l'image.";
+    }
+
+    // Préparation de la requête SQL pour insérer le nouveau lien entre le médecin et le produit dans la table 'doctors_products'
+    $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) 
+            VALUES (:doctor_id, :product_id)";
+
+    // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+    $params = [
+        ':doctor_id' => $doctorId,
+        ':product_id' => $productId
+    ];
+
+    // Execute de la requête préparée via la fonction executeQuery
+    $sth = executeQuery($db, $sql, $params);
+
+    // Valide la transaction en cours et rends permanent toutes les modifications apportées à la base de données depuis le dernier appel à beginTransaction().
+    $db->commit();
+
+    // Affiche le message de succès si la transaction a réussi.
+    echo "Produit ajouté avec succès !";
 }
 
 ?>
@@ -118,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <main class="flex-grow-1 py-4">
         <div class="container py-4">
-            <form action="#" method="POST" class="col-6 mx-auto">
+            <form action="#" method="POST" class="col-6 mx-auto" enctype="multipart/form-data">
                 <fieldset>
                     <legend>Ajouter un produit</legend>
                     <div class="row mb-3">
@@ -163,6 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row mb-3">
                         <div class="col">
                             <label for="productPathImg" class="form-label">Fichier image : </label>
+                            <input type="hidden" name="MAX_FILE_SIZE" value="3072000" />
                             <input type="file" name="product_path_img" id="productPathImg" class="form-control">
                         </div>
                     </div>
@@ -185,4 +199,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </main>
 </body>
+
 </html>
