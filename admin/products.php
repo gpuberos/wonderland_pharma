@@ -20,6 +20,8 @@ Etape 4 : Vérification des différences
 
 */
 
+$headTitle = "Back Office : Liste des produits";
+
 require_once __DIR__ . '/utilities/layout/header.ut.php';
 
 // Prépare la requête SQL pour récupérer les produits
@@ -46,11 +48,11 @@ if (isset($_POST['sortBy'])) {
         // Si c'est le cas, appelle la fonction getSortedProducts() avec la base de données et l'ordre de tri sélectionné par l'utilisateur
         $products = getSortedProducts($db, $sortBy);
     }
-} 
+}
 
 ?>
 
-<div class="container py-4">
+<div class="container-fluid p-5">
     <section>
         <div class="row mb-4">
             <div class=" col-auto">
@@ -64,14 +66,15 @@ if (isset($_POST['sortBy'])) {
                         </select>
                     </div>
                     <div class="col-auto">
-                        <input type="submit" value="Valider" class="btn bg-blue text-white">
+                        <input type="submit" value="Valider" class="btn btn-primary">
                     </div>
                 </form>
             </div>
+            <div class="col-auto ms-auto"><a class="btn btn-primary" href="/admin/add.php"><i class="bi bi-plus-circle"></i> Ajouter un produit</a></div>
         </div>
 
         <div class="row">
-            <table class="table table-striped">
+            <table class="table table-striped align-middle">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -82,7 +85,7 @@ if (isset($_POST['sortBy'])) {
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     <?php foreach ($products as $row) : ?>
                         <tr>
                             <th scope="row"><?= $row['id'] ?></th>
@@ -90,7 +93,7 @@ if (isset($_POST['sortBy'])) {
                             <td><?= $row['category_name'] ?></td>
                             <td><?= substr($row['product_description'], 0, 60) ?> ...</td>
                             <td><?= $row['product_price'] ?> €</td>
-                            <td><a href="edit.php?id=<?= $row['id'] ?>" class="btn bg-blue text-white">Modifier</a></td>
+                            <td><a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

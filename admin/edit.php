@@ -1,15 +1,18 @@
-<?php require_once __DIR__ . '/utilities/layout/header.ut.php'; ?>
-
 <?php
+$headTitle = "Back Office : Modification d'un produit";
+
+require_once __DIR__ . '/utilities/layout/header.ut.php'; 
+
+// Récupère la valeur de 'id' à partir de la chaîne de requête URL et l'assigne à la variable $currentId
 $currentId = $_GET['id'];
 
-// Prépare la requête SQL pour sélectionner le jeu avec l'ID spécifié.
+// Prépare la requête SQL pour sélectionner le produit avec l'ID spécifié.
 $sql = "SELECT * FROM products WHERE id = :current_id";
 $product = findDataById($db, $sql, $currentId);
 
 ?>
 
-<div class="container py-4">
+<div class="container-fluid p-5">
     <form action="update.php" method="POST" class="col-6 mx-auto" enctype="multipart/form-data">
         <fieldset>
             <legend>Modifier un produit</legend>

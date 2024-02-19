@@ -1,6 +1,10 @@
-<?php require_once __DIR__ . '/utilities/layout/header.ut.php'; ?>
+<?php
+$headTitle = "Back Office : Accueil";
 
-<div class="container py-4">
+require_once __DIR__ . '/utilities/layout/header.ut.php';
+?>
+
+<div class="container-fluid p-5">
 
 </div>
 
