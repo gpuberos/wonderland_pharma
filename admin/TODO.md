@@ -34,6 +34,41 @@ $sql = "SELECT * FROM products WHERE id = :current_id";
     <input type="submit" value="Mettre à jour">
 </form>
 ```
+**A intégrer**
+```php
+            <div class="row mb-3">
+                <div class="col">
+
+                    <label for="productCategory" class="form-label visually-hidden">Catégorie</label>
+                    <select class="form-select" id="productCategory" name="product_category_id" aria-label="Sélection de la catégorie">
+                        <option selected>Sélectionner une catégorie</option>
+                        <?php foreach ($productCategories as $row) : ?>
+                            <option value="<?= $row['id'] ?>"><?= $row['category_name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="doctor" class="form-label visually-hidden">Médecins</label>
+                    <select class="form-select" id="doctor" name="doctor_id" aria-label="Sélection du médecin">
+                        <option selected>Sélectionner un médecin</option>
+                        <?php foreach ($doctors as $row) : ?>
+                            <option value="<?= $row['id'] ?>"><?= $row['doctor_name'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="productPathImg" class="form-label">Fichier image : </label>
+                    <input type="hidden" name="MAX_FILE_SIZE" value="3072000" />
+                    <input type="file" name="product_path_img" id="productPathImg" class="form-control">
+                </div>
+            </div>
+```
 
 ## update.php :
 1. Etape 1 : Récupération des données soumises
@@ -73,3 +108,20 @@ trim() supprime les espaces en début et fin de chaine.
 
 opérateur de coalescence ?? : https://www.php.net/manual/fr/migration70.new-features.php#migration70.new-features.null-coalesce-op
 // TODO : Thème tableau Bootstrap : https://mdbootstrap.com/snippets/standard/mdbootstrap/2920555?view=side
+
+Envoyer les messages d'erreurs.
+```php
+<?php
+// Some browsers will not display the content if it is too short
+// We use str_pad() to make the output long enough
+echo str_pad("Hello World!", 4096);
+
+// Use flush() to send the string to the browser
+flush();
+
+// Display the rest of the content three seconds later
+sleep(3);
+echo "<br>";
+echo "Hello World!";
+?>
+```

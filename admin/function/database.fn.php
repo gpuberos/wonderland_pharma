@@ -41,34 +41,31 @@ function findAllDatas($db, $sql)
     // Récupère tous les résultats de la requête SQL et les stocke dans $result.
     // La méthode fetchAll() est utilisée pour récupérer tous les résultats de la requête SQL.
     // Elle retourne un tableau associatif de tous les résultats qui sont stockés dans la variable $result.
-    $result = $sth->fetchAll();
+    $results = $sth->fetchAll();
 
     // Retourne les résultats récupérés.
     // La fonction retourne le tableau associatif $result qui contient tous les résultats récupérés de la base de données.
-    return $result;
+    return $results;
 }
 
 // Fonction qui récupère un produit spécifique de la base de données en utilisant son ID.
-// function findDataById($db, $currentId)
-// {
-//     // Prépare la requête SQL pour sélectionner le jeu avec l'ID spécifié.
-//     $sql = "SELECT * FROM products WHERE ID = :currentId";
+function findDataById($db, $sql, $currentId)
+{
+    // Prépare la requête SQL pour l'exécution.
+    $sth = $db->prepare($sql);
 
-//     // Prépare la requête SQL pour l'exécution.
-//     $sth = $db->prepare($sql);
+    // Lie le paramètre à la requête SQL.
+    $sth->bindParam(':current_id',$currentId, PDO::PARAM_INT);
 
-//     // Lie le paramètre à la requête SQL.
-//     $sth->bindParam(':currentId', $currentId, PDO::PARAM_INT);
+    // Exécute la requête SQL.
+    $sth->execute();
 
-//     // Exécute la requête SQL.
-//     $sth->execute();
+    // Récupère le résultat de la requête SQL et le stocke dans $game.
+    $result = $sth->fetch();
 
-//     // Récupère le résultat de la requête SQL et le stocke dans $game.
-//     $game = $sth->fetch();
-
-//     // Retourne le jeu récupéré.
-//     return $game;
-// }
+    // Retourne le jeu récupéré.
+    return $result;
+}
 
 // Fonction qui exécute une requête SQL préparée avec des paramètres liés.
 function executeQuery($db, $sql, $params)

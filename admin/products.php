@@ -22,6 +22,20 @@ Etape 4 : Vérification des différences
 
 require_once __DIR__ . '/utilities/layout/header.ut.php';
 
+// Prépare la requête SQL pour récupérer les produits
+$productsQuery = "SELECT 
+                products.id,
+                products.product_name, 
+                products.product_description, 
+                products.product_price, 
+                product_category.category_name
+                FROM products 
+                INNER JOIN product_category ON products.product_category_id = product_category.id
+                ";
+
+// Exécute la fonction findAllDatas qui affiche tous les résultats de la requête SQL et les stockent dans la variable $products
+$products = findAllDatas($db, $productsQuery);
+
 // Vérifie si 'sortBy' a été posté
 if (isset($_POST['sortBy'])) {
     // Si c'est le cas, stocke la valeur dans la variable $sortBy
@@ -32,22 +46,7 @@ if (isset($_POST['sortBy'])) {
         // Si c'est le cas, appelle la fonction getSortedProducts() avec la base de données et l'ordre de tri sélectionné par l'utilisateur
         $products = getSortedProducts($db, $sortBy);
     }
-} else {
-    // Si 'sortBy' n'a pas été posté, récupère tous les produits sans tri
-    // Prépare la requête SQL pour récupérer les produits
-    $productsQuery = "SELECT 
-                products.id,
-                products.product_name, 
-                products.product_description, 
-                products.product_price, 
-                product_category.category_name
-                FROM products 
-                INNER JOIN product_category ON products.product_category_id = product_category.id
-                ";
-
-    // Exécute la fonction findAllDatas pour récupérer toutes les données et stocke les résultats dans la variable $products
-    $products = findAllDatas($db, $productsQuery);
-}
+} 
 
 ?>
 

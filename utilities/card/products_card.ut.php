@@ -1,25 +1,28 @@
 <?php
-// Vérification si l'utilisateur a soumis une préférence de tri (ASC ou DESC)
-if (isset($_POST['sortBy']) && $_POST['sortBy'] == 'ASC') {
-    // Si ASC est sélectionné, récupérer les produits triés par ordre croissant
-    $products = getSortedProducts($db, 'ASC');
-} else if (isset($_POST['sortBy']) && $_POST['sortBy'] == 'DESC') {
-    // Si DESC est sélectionné, récupérer les produits triés par ordre décroissant
-    $products = getSortedProducts($db, 'DESC');
-} else {
-    // Si aucune préférence n'est spécifiée, récupérer tous les produits sans tri
-    $productsQuery = "SELECT 
-                    products.product_name, 
-                    products.product_description, 
-                    products.product_price, 
-                    product_category.category_name, 
-                    product_pictures.product_path_img 
-                    FROM products 
-                    INNER JOIN product_category ON products.product_category_id = product_category.id
-                    INNER JOIN product_pictures ON product_pictures.product_id = products.id;
-                    ";
+// Prépare la requête SQL pour récupérer les produits
+$productsQuery = "SELECT 
+                products.id,
+                products.product_name, 
+                products.product_description, 
+                products.product_price, 
+                product_category.category_name
+                FROM products 
+                INNER JOIN product_category ON products.product_category_id = product_category.id
+                ";
 
-    $products = findAllDatas($db, $productsQuery);
+// Exécute la fonction findAllDatas qui affiche tous les résultats de la requête SQL et les stockent dans la variable $products
+$products = findAllDatas($db, $productsQuery);
+
+// Vérifie si 'sortBy' a été posté
+if (isset($_POST['sortBy'])) {
+    // Si c'est le cas, stocke la valeur dans la variable $sortBy
+    $sortBy = $_POST['sortBy'];
+
+    // Vérifie si la valeur de $sortBy est 'ASC' ou 'DESC'
+    if ($sortBy === 'ASC' || $sortBy === 'DESC') {
+        // Si c'est le cas, appelle la fonction getSortedProducts() avec la base de données et l'ordre de tri sélectionné par l'utilisateur
+        $products = getSortedProducts($db, $sortBy);
+    }
 }
 
 ?>
