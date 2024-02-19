@@ -2,13 +2,13 @@
 
 // @TODO! - Créer Backoffice et intégrer la page ajout dans /admin/
 
-require_once dirname(__DIR__) . '/config/path.cfg.php';
-require_once dirname(__DIR__) . '/config/database.cfg.php';
-require_once dirname(__DIR__) . '/function/database.fn.php';
+require_once __DIR__ . '/config/path.cfg.php';
+require_once __DIR__ . '/config/database.cfg.php';
+require_once __DIR__ . '/function/database.fn.php';
 
 $db = getPDOlink($config);
 
-require_once dirname(__DIR__) . '/function/header.fn.php';
+require_once __DIR__ . '/function/header.fn.php';
 require_once __DIR__ . '/function/upload.fn.php';
 
 // Récupère toutes les catégories de produits.
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
                 VALUES (:product_name, :product_description, :product_price, :product_category_id)";
 
+        // Préparation de la requête SQL pour l'exécution.
         $sth = $db->prepare($sql);
 
         // Lie les paramètres à la requête SQL.

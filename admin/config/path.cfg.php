@@ -1,7 +1,10 @@
 <?php
 
-// Définition du chemin d'accès par défaut au répertoire des CSS 
-define("CSS_PATH", "admin/assets/css");
+// Définition du chemin d'accès par défaut au répertoire des CSS du Back Office
+define("CSS_PATH", "/admin/assets/css");
+
+// Définition du chemin d'accès par défaut au répertoire des images du Back Office
+define("IMG_PATH_BO", "/admin/assets/img");
 
 // Définition du chemin d'accès par défaut au répertoire des images
 define("IMG_PATH", "assets/img");

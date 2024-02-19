@@ -2,13 +2,13 @@
 
 // @TODO! - Créer Backoffice et intégrer la page ajout dans /admin/
 
-require_once dirname(__DIR__) . '/config/path.cfg.php';
-require_once dirname(__DIR__) . '/config/database.cfg.php';
-require_once dirname(__DIR__) . '/function/database.fn.php';
+require_once __DIR__ . '/config/path.cfg.php';
+require_once __DIR__ . '/config/database.cfg.php';
+require_once __DIR__ . '/function/database.fn.php';
 
 $db = getPDOlink($config);
 
-require_once dirname(__DIR__) . '/function/header.fn.php';
+require_once __DIR__ . '/function/header.fn.php';
 require_once __DIR__ . '/function/upload.fn.php';
 
 // Récupère toutes les catégories de produits.

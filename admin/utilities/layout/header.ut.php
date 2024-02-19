@@ -1,3 +1,25 @@
+<?php
+
+// Inclusion du fichier de configuration des chemins d'accès (Images)
+require_once dirname(__DIR__, 2) . '/config/path.cfg.php';
+
+// Inclusion du fichier de configuration de la base de données
+require_once dirname(__DIR__, 2) . '/config/database.cfg.php';
+
+// Inclusion du fichier contenant les fonctions relatives à la base de données
+require_once dirname(__DIR__, 2) . '/function/database.fn.php';
+
+// Appel de la fonction getPDOlink() pour obtenir un lien vers la base de données
+$db = getPDOlink($config);
+
+// Inclusion du fichier contenant les fonctions nécessaire à l'en-tête
+require_once dirname(__DIR__, 2) . '/function/header.fn.php';
+
+// Inclusion du fichier contenant les fonctions nécessaire au frontend
+require_once dirname(__DIR__, 2) . '/function/frontend.fn.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -12,14 +34,12 @@
     <!-- CSS Custom -->
     <link rel="stylesheet" href="<?= CSS_PATH ?>/styles.css">
 
-    <title><?= $pageInfo['page_title'] ?></title>
-    <meta name="description" content="<?= $pageInfo['page_meta_desc'] ?>">
-    <meta name="keywords" content="<?= $pageInfo['page_meta_keywords'] ?>">
+    <title>Back Office</title>
 </head>
 
-<body id="<?= $pageInfo['page_bodyId'] ?>" class="d-flex flex-column vh-100">
+<body class="d-flex flex-column vh-100">
     <header>
-        <?php require_once dirname(dirname(__DIR__)) . '/utilities/nav/header_nav.ut.php'; ?>
+        <?php require_once dirname(__DIR__, 2) . '/utilities/nav/header_nav.ut.php'; ?>
     </header>
 
     <main class="flex-grow-1 py-4">

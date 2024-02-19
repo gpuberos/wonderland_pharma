@@ -1,0 +1,8 @@
+# Sécuriser l'accès au répertoire
+AuthType Basic
+AuthName "Accès restreint"
+AuthUserFile "../../../www/wpharma/admin/config/wonderland.htpasswd"
+Require valid-user
+
+# Bloquer l'indexation par les robots
+Options -Indexes

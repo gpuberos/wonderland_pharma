@@ -1,3 +1,7 @@
-<?php
+<?php require_once __DIR__ . '/utilities/layout/header.ut.php'; ?>
 
-echo "Hello World !";
+<div class="container py-4">
+
+</div>
+
+<?php require_once __DIR__ . '/utilities/layout/footer.ut.php'; ?>

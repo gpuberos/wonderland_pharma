@@ -36,8 +36,8 @@ function uploadImageFile($inputName, $destinationPath)
         $cleanFileName = str_replace([' ', '_'], '-', pathinfo($fileName, PATHINFO_FILENAME));
         $charLimitFileName = strtolower(substr($cleanFileName, 0, 50));
 
-        // Crée le nouveau nom du fichier et ajoute la date et l'heure
-        $newFileName = $charLimitFileName . '-' . date("YmdHis") . '.' . $fileExtension;
+        // Crée le nouveau nom du fichier et un id unique
+        $newFileName = $charLimitFileName . '-' . uniqid() . '.' . $fileExtension;
 
         // Extensions de fichiers autorisées
         $allowedExtensions = ['jpg', 'jpeg', 'gif', 'webp', 'png', 'svg'];
