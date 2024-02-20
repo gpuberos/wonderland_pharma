@@ -1,25 +1,5 @@
 <?php
 
-/*
-
-index.php :
-Etape 1 : Connexion à la base de données et récupération des informations de tous les produits
-Etape 2 : Récupération de la liste des produits et affichage sous forme de tableau
-Etape 3 : Ajouter un bouton modifier qui a l'id du produit et en URL : edit.php?id={numéro id de mon produit}
-
-edit.php :
-Etape 1 : Récupération de l'ID du produit en utilisant GET
-Etape 2 : Connexion à la base de données et récupération des informations du produit
-Etape 3 : Affichage du formulaire pré-rempli
-
-update.php :
-Etape 1 : Récupération des données soumises
-Etape 2 : Connexion à la base de données et récupération des données actuelles
-Etape 3 : Comparaison des tableaux
-Etape 4 : Vérification des différences
-
-*/
-
 $headTitle = "Back Office : Liste des produits";
 
 require_once __DIR__ . '/utilities/layout/header.ut.php';

@@ -1,6 +1,5 @@
 <?php
 
-
 // Fonction pour récupérer les produits triés en fonction de la préférence de l'utilisateur
 function getSortedProducts($db, $orderBy)
 {

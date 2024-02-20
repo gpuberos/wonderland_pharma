@@ -2,6 +2,7 @@
 $headTitle = "Back Office : Ajout d'un produit";
 
 require_once __DIR__ . '/utilities/layout/header.ut.php';
+require_once __DIR__ . '/function/upload.fn.php';
 
 
 // Récupère toutes les catégories de produits.
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insère le nouveau produit dans la table 'products'
     $sql = "INSERT INTO `products` (`product_name`, `product_description`, `product_price`, `product_category_id`)
-                VALUES (:product_name, :product_description, :product_price, :product_category_id)";
+            VALUES (:product_name, :product_description, :product_price, :product_category_id)";
 
     // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
     $params = [
@@ -56,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier s'il y a eu une erreur lors du téléchargement de l'image
     if ($productPathImg !== null) {
         // Insère la nouvelle image de produit dans la table 'product_pictures'
-        $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) VALUES (:product_path_img, :product_id)";
+        $sql = "INSERT INTO `product_pictures` (`product_path_img`, `product_id`) 
+                VALUES (:product_path_img, :product_id)";
 
         // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
         $params = [
@@ -79,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Insère le nouveau lien entre le médecin et le produit dans la table 'doctors_products'
-    $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) VALUES (:doctor_id, :product_id)";
+    $sql = "INSERT INTO `doctors_products` (`doctor_id`, `product_id`) 
+            VALUES (:doctor_id, :product_id)";
 
     // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
     $params = [

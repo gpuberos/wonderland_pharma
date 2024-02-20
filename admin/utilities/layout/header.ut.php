@@ -37,7 +37,7 @@ require_once dirname(__DIR__, 2) . '/function/frontend.fn.php';
     <!-- CSS Custom -->
     <link rel="stylesheet" href="<?= CSS_PATH_BO ?>/styles.css">
 
-    <title><?= $headTitle ?></title>
+    <title><?= isset($headTitle) ? $headTitle : "Back Office" ?></title>
 </head>
 
 <body class="d-flex flex-column vh-100">
