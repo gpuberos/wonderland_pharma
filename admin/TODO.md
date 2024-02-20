@@ -34,70 +34,34 @@ $sql = "SELECT * FROM products WHERE id = :current_id";
     <input type="submit" value="Mettre à jour">
 </form>
 ```
-**A intégrer**
-```php
-            <div class="row mb-3">
-                <div class="col">
-
-                    <label for="productCategory" class="form-label visually-hidden">Catégorie</label>
-                    <select class="form-select" id="productCategory" name="product_category_id" aria-label="Sélection de la catégorie">
-                        <option selected>Sélectionner une catégorie</option>
-                        <?php foreach ($productCategories as $row) : ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['category_name'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="doctor" class="form-label visually-hidden">Médecins</label>
-                    <select class="form-select" id="doctor" name="doctor_id" aria-label="Sélection du médecin">
-                        <option selected>Sélectionner un médecin</option>
-                        <?php foreach ($doctors as $row) : ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['doctor_name'] ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <div class="col">
-                    <label for="productPathImg" class="form-label">Fichier image : </label>
-                    <input type="hidden" name="MAX_FILE_SIZE" value="3072000" />
-                    <input type="file" name="product_path_img" id="productPathImg" class="form-control">
-                </div>
-            </div>
-```
 
 ## update.php :
 1. Etape 1 : Récupération des données soumises
-    ```php
-   $sendDatas = $_POST;
-   ```
+```php
+$sendDatas = $_POST;
+```
 3. Etape 2 : Connexion à la base de données et récupération des données actuelles
 ```php
 sql = "SELECT * FROM products WHERE id = :current_id";
 $currentDatas = $sth->fetch();
 ```
 5. Etape 3 : Comparaison des tableaux
-   ```php
-   $differences = array_diff_assoc($sendDatas, $currentDatas);
-   ```
+```php
+$differences = array_diff_assoc($sendDatas, $currentDatas);
+```
 6. Etape 4 : Vérification des différences
-   ```php
-   if (!empty($differences)) {
-        // Update de la base données
-        $sql = "UPDATE products 
-                SET product_name = :product_name, product_description = :product_description, product_price = :product_price 
-                WHERE id = :current_id";
-
-            // prepare, bindParam, execute
-            echo "Le produit a été mis à jour !"
-    } else {
-        echo "Aucune modification n'a été détectée !"
-    }
-   ```
+```php
+if (!empty($differences)) {
+     // Update de la base données
+     $sql = "UPDATE products 
+             SET product_name = :product_name, product_description = :product_description, product_price = :product_price 
+             WHERE id = :current_id";
+         // prepare, bindParam, execute
+         echo "Le produit a été mis à jour !"
+ } else {
+     echo "Aucune modification n'a été détectée !"
+ }
+```
 
 Delete Créer table Statut :
 1 Quand je le rendre public

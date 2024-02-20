@@ -22,10 +22,12 @@ $sql = "SELECT
     products.product_price,
     products.product_category_id,
     product_category.category_name,
+    product_pictures.product_path_img,
     doctors.id AS doctor_id,
     doctors.doctor_name
 FROM products
 INNER JOIN product_category ON products.product_category_id = product_category.id
+INNER JOIN product_pictures ON products.id = product_pictures.product_id
 INNER JOIN doctors_products ON products.id = doctors_products.product_id
 INNER JOIN doctors ON doctors_products.doctor_id = doctors.id
 WHERE products.id = :current_id";
@@ -42,8 +44,7 @@ var_dump($product);
         <fieldset>
             <legend>Modifier un produit</legend>
 
-            <input type="hidden" name="current_id" value="<?= $currentId ?>">
-            <input type="hidden" name="product_id" value="<?= $product['product_id'] ?>">
+            <input type="hidden" name="id" value="<?= $product['product_id'] ?>">
 
             <div class="row mb-3">
                 <div class="col">
@@ -78,6 +79,25 @@ var_dump($product);
 
             <div class="row mb-3">
                 <div class="col">
+                    <div class="card">
+                        <div class="row g-0 flex-md-row-reverse">
+                            <div class="col-md-4">
+                                <img src="../<?= PRODUCTS_IMG_PATH . $product['product_path_img'] ?>" class="img-fluid rounded-end" alt="Image du produit actuel" />
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <label for="productPathImg" class="form-label">Fichier image : </label>
+                                    <input type="hidden" name="MAX_FILE_SIZE" value="3072000" />
+                                    <input type="file" name="product_path_img" id="productPathImg" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
                     <label for="productPrice" class="form-label">Prix : </label>
                     <input type="number" name="product_price" value="<?= $product['product_price'] ?>" id="productPrice" class="form-control">
                 </div>
@@ -97,6 +117,7 @@ var_dump($product);
             </div>
         </fieldset>
     </form>
+
 </div>
 
 <?php require_once __DIR__ . '/utilities/layout/footer.ut.php'; ?>
