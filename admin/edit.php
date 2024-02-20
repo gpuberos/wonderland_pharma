@@ -55,7 +55,7 @@ var_dump($product);
 
             <div class="row mb-3">
                 <div class="col">
-                    <label for="productCategory" class="form-label visually-hidden">Catégorie</label>
+                    <label for="productCategory" class="form-label">Catégorie : </label>
                     <select class="form-select" id="productCategory" name="product_category_id" aria-label="Sélection de la catégorie">
                         <option>Sélectionner une catégorie</option>
                         <?php foreach ($productCategories as $row) : ?>
@@ -67,7 +67,7 @@ var_dump($product);
 
             <div class="row mb-3">
                 <div class="col">
-                    <label for="doctor" class="form-label visually-hidden">Médecins</label>
+                    <label for="doctor" class="form-label">Médecins : </label>
                     <select class="form-select" id="doctor" name="doctor_id" aria-label="Sélection du médecin">
                         <option>Sélectionner un médecin</option>
                         <?php foreach ($doctors as $row) : ?>
