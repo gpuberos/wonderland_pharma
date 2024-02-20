@@ -6,7 +6,7 @@ require_once __DIR__ . '/utilities/layout/header.ut.php';
 
 // Prépare la requête SQL pour récupérer les produits
 $productsQuery = "SELECT 
-                products.id,
+                products.id AS product_id,
                 products.product_name, 
                 products.product_description, 
                 products.product_price, 
@@ -68,12 +68,12 @@ if (isset($_POST['sortBy'])) {
                 <tbody class="table-group-divider">
                     <?php foreach ($products as $row) : ?>
                         <tr>
-                            <th scope="row"><?= $row['id'] ?></th>
+                            <th scope="row"><?= $row['product_id'] ?></th>
                             <td><?= $row['product_name'] ?></td>
                             <td><?= $row['category_name'] ?></td>
                             <td><?= substr($row['product_description'], 0, 60) ?> ...</td>
                             <td><?= $row['product_price'] ?> €</td>
-                            <td><a href="edit.php?id=<?= $row['id'] ?>" class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a></td>
+                            <td><a href="edit.php?id=<?= $row['product_id'] ?>" class="btn btn-primary"><i class="bi bi-pencil"></i> Modifier</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
