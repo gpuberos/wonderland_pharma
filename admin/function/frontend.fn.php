@@ -5,7 +5,7 @@ function getSortedProducts($db, $orderBy)
 {
     // Construction de la requête SQL pour récupérer les produits avec les noms de catégorie
     $productsQuery = "SELECT 
-                    products.id,
+                    products.id AS product_id,
                     products.product_name, 
                     products.product_description, 
                     products.product_price, 
