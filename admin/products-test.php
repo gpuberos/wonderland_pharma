@@ -72,7 +72,7 @@ if (isset($_POST['sortBy'])) {
                             <td><?= $row['category_name'] ?></td>
                             <td><?= substr($row['product_description'], 0, 60) ?> ...</td>
                             <td><?= $row['product_price'] ?> €</td>
-                            <td><a href="edit.php?id=<?= $row['product_id'] ?>" class="btn btn-primary me-3"><i class="bi bi-pencil"></i> Modifier</a> <a href="delete.php?id=<?= $row['product_id'] ?>" class="btn btn-danger"><i class="bi bi-trash3"></i> Supprimer</a></td>
+                            <td><a href="edit-test.php?id=<?= $row['product_id'] ?>" class="btn btn-primary me-3"><i class="bi bi-pencil"></i> Modifier</a> <a href="delete.php?id=<?= $row['product_id'] ?>" class="btn btn-danger"><i class="bi bi-trash3"></i> Supprimer</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

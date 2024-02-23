@@ -79,7 +79,7 @@ var_dump($product);
             <div class="row mb-3">
                 <div class="col">
                     <label for="productPrice" class="form-label">Prix : </label>
-                    <input type="number" name="product_price" value="<?= $product['product_price'] ?>" id="productPrice" class="form-control">
+                    <input type="number" min="0" step="0.01" name="product_price" value="<?= $product['product_price'] ?>" id="productPrice" class="form-control">
                 </div>
             </div>
 

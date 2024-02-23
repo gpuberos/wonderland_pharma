@@ -35,7 +35,7 @@ WHERE products.id = :current_id";
 // Exécute la fonction findDataById pour récupérer les informations du produit de la requête SQL avec l'ID du produit et stocke le résultat dans la variable $product
 $product = findDataById($db, $sql, $currentId);
 
-var_dump($product);
+// var_dump($product);
 
 ?>
 
@@ -81,7 +81,7 @@ var_dump($product);
                 <div class="col">
                     <div class="card">
                         <div class="row g-0 flex-md-row-reverse">
-                            <div class="col-md-4">
+                            <div class="col-auto">
                                 <img src="../<?= PRODUCTS_IMG_PATH . $product['product_path_img'] ?>" class="img-fluid rounded-end" alt="Image du produit actuel" />
                             </div>
                             <div class="col-md-8">
@@ -99,7 +99,7 @@ var_dump($product);
             <div class="row mb-3">
                 <div class="col">
                     <label for="productPrice" class="form-label">Prix : </label>
-                    <input type="number" name="product_price" value="<?= $product['product_price'] ?>" id="productPrice" class="form-control">
+                    <input type="number" min="0" step="0.01" name="product_price" value="<?= $product['product_price'] ?>" id="productPrice" class="form-control">
                 </div>
             </div>
 
@@ -112,7 +112,8 @@ var_dump($product);
 
             <div class="row mb-3">
                 <div class="col">
-                    <input type="submit" name="submitProduct" value="Mettre à jour" class="btn btn-primary">
+                    <input type="submit" name="submitProduct" value="Mettre à jour" class="btn btn-primary me-3">
+                    <a href="/admin/products-test.php" class="btn btn-danger">Annuler</a>
                 </div>
             </div>
         </fieldset>
