@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="row mb-3">
                 <div class="col">
                     <label for="productPrice" class="form-label">Prix : </label>
-                    <input type="number" name="product_price" id="productPrice" class="form-control">
+                    <input type="number" min="0" step="0.01" name="product_price" id="productPrice" class="form-control">
                 </div>
             </div>
 
