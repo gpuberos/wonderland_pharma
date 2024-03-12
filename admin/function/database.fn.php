@@ -51,50 +51,85 @@ function findAllDatas($db, $sql)
 // Fonction qui récupère un produit spécifique de la base de données en utilisant son ID.
 function findDataById($db, $sql, $currentId)
 {
-    // Prépare la requête SQL pour l'exécution.
-    $sth = $db->prepare($sql);
+    try {
+        // Prépare la requête SQL pour l'exécution.
+        $sth = $db->prepare($sql);
 
-    // Lie le paramètre à la requête SQL.
-    $sth->bindParam(':current_id',$currentId, PDO::PARAM_INT);
+        // Lie le paramètre à la requête SQL.
+        $sth->bindParam(':current_id', $currentId, PDO::PARAM_INT);
 
-    // Exécute la requête SQL.
-    $sth->execute();
+        // Exécute la requête SQL.
+        $sth->execute();
 
-    // Récupère le résultat de la requête SQL et le stocke dans $game.
-    $result = $sth->fetch();
+        // Récupère le résultat de la requête SQL et le stocke dans $game.
+        $result = $sth->fetch();
 
-    // Retourne le jeu récupéré.
-    return $result;
+        // Retourne le jeu récupéré.
+        return $result;
+    } catch (PDOException $e) {
+        // Affiche le message d'erreur à l'utilisateur
+        echo "Erreur lors de la recherche des données : " . $e->getMessage();
+        // Retourne false si une erreur s'est produite.
+        return false;
+    }
 }
 
 // Fonction qui exécute une requête SQL préparée avec des paramètres liés.
 function executeQuery($db, $sql, $params)
 {
     try {
-    // Préparation de la requête SQL pour l'exécution.
-    // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
-    // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
-    $sth = $db->prepare($sql);
+        // Préparation de la requête SQL pour l'exécution.
+        // $db est l'objet de la base de données, et $sql est la chaîne de la requête SQL.
+        // La méthode prepare() renvoie un objet 'statement' ($sth) qui peut être utilisé pour exécuter la requête.
+        $sth = $db->prepare($sql);
 
-    // Parcours de chaque paramètre dans le tableau $params.
-    // Le & avant $value signifie que nous passons $value par référence. 
-    // Cela signifie que nous donnons à la fonction un lien vers la variable originale, et non une copie de sa valeur.
-    foreach ($params as $param => &$value) {
-        // Liaison du paramètre à la requête SQL
-        $sth->bindParam($param, $value);
-    }
+        // Parcours de chaque paramètre dans le tableau $params.
+        // Le & avant $value signifie que nous passons $value par référence. 
+        // Cela signifie que nous donnons à la fonction un lien vers la variable originale, et non une copie de sa valeur.
+        foreach ($params as $param => &$value) {
+            // Liaison du paramètre à la requête SQL
+            $sth->bindParam($param, $value);
+        }
 
-    // Execute la requête préparée
-    $sth->execute();
+        // Execute la requête préparée
+        $sth->execute();
 
-    // Retourne l'objet 'statement' ($sth) si la requête a réussi.
-    return $sth;
-    
+        // Retourne l'objet 'statement' ($sth) si la requête a réussi.
+        return $sth;
     } catch (PDOException $e) {
         // Affiche le message d'erreur à l'utilisateur
         echo "Erreur : " . $e->getMessage();
-        
+
         // Retourne false si une erreur s'est produite.
         return false;
+    }
+}
+
+function deleteProduct($db, $id)
+{
+    try {
+        // Retourne le product_path_img
+        $ImagePathSql = "SELECT 
+                    product_pictures.product_path_img 
+                    FROM products 
+                    INNER JOIN product_pictures ON products.id = product_pictures.product_id
+                    WHERE products.id = :current_id";
+
+        $ImagePath = findDataById($db, $ImagePathSql, $id);
+
+        $sql = "DELETE FROM `products` WHERE id = :product_id";
+
+        // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
+        $params = [
+            ':product_id' => $id,
+        ];
+
+        // Execute de la requête préparée via la fonction executeQuery
+        if (executeQuery($db, $sql, $params)) {
+            // Supprime le fichier de l'image du produit
+            unlink($ImagePath);
+        };
+    } catch (PDOException $e) {
+        echo "Erreur : " . $e->getMessage();
     }
 }
