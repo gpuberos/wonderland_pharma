@@ -11,9 +11,8 @@ function formatLocalFilePath($path)
     return $formattedPath;
 }
 
-// La fonction uploadImageFile, upload les fichiers images dans un répertoire uniquement avec les extensions alloués et supprime l'ancienne image si elle existe et que le paramètre optionnelle est défini.
-// Le paramètre $oldImage est optionnel et sa valeur par défaut est null.
-function uploadImageFile($inputName, $destinationPath, $oldImage = null)
+// La fonction uploadImageFile, upload les fichiers images dans un répertoire uniquement avec les extensions alloués.
+function uploadImageFile($inputName, $destinationPath)
 {
     // Vérifie si la méthode de la requête est POST et si un fichier a été uploadé sans erreur
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === UPLOAD_ERR_OK) {
@@ -59,21 +58,8 @@ function uploadImageFile($inputName, $destinationPath, $oldImage = null)
             // La fonction move_upload_file vérifie la validité du fichier en s'assurant qu'il a été uploadé via un formulaire POST (HTTP POST).
             // https://www.php.net/manual/fr/function.move-uploaded-file.php
             if (move_uploaded_file($fileTmpPath, $destPath)) {
-                // Si le fichier a été déplacé avec succès, on supprime l'ancienne image si elle existe
-                if ($oldImage !== null) {
-                    // Si $oldImage n'est pas null, on construit le chemin complet de l'ancienne image en utilisant le chemin $destFormatPath correctement formaté pour le système d'exploitation actuel et le nom de l'ancienne image
-                    $oldImagePath = $destFormattedPath . $oldImage;
-
-                    if (file_exists($oldImagePath)) {
-                        // Si le fichier existe, supprime le du serveur
-                        // https://www.php.net/manual/fr/function.unlink
-                        unlink($oldImagePath);
-                    }
-                }
-
                 // On retourne le nom du fichier.
                 return $newFileName;
-
             } else {
                 // Si le fichier n'a pas pu être déplacé, on retourne null.
                 return null;
@@ -83,4 +69,17 @@ function uploadImageFile($inputName, $destinationPath, $oldImage = null)
         // Si Une erreur inattendue s'est produite lors du téléchargement du fichier, on retourne null.
         return null;
     }
+}
+
+function deleteImageFile($imageName, $destinationPath)
+{
+    $destFormattedPath = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . formatLocalFilePath($destinationPath);
+    $imagePath = $destFormattedPath . $imageName;
+
+    // Vérifie si le fichier existe
+    if (file_exists($imagePath)) {
+        unlink($imagePath);
+    }
+
+    return true;
 }

@@ -105,31 +105,127 @@ function executeQuery($db, $sql, $params)
     }
 }
 
+function updateProduct($db, $id, $data)
+{
+    // Commencer la transaction
+    $db->beginTransaction();
+
+    // Prépare la requête SQL pour mettre à jour le produit
+    $sql = "UPDATE products SET 
+            product_name = :product_name, 
+            product_description = :product_description, 
+            product_price = :product_price,
+            product_category_id = :product_category_id
+            WHERE id = :product_id";
+
+    $params = [
+        ':product_name' => isset($data['product_name']) ? $data['product_name'] : null,
+        ':product_description' => isset($data['product_description']) ? $data['product_description'] : null,
+        ':product_price' => isset($data['product_price']) ? $data['product_price'] : null,
+        ':product_category_id' => isset($data['product_category_id']) ? $data['product_category_id'] : null,
+        ':product_id' => $id
+    ];
+
+    // Exécute la requête SQL
+    $result = executeQuery($db, $sql, $params);
+    if ($result === false) {
+        echo "Erreur lors de la mise à jour du produit.";
+        $db->rollBack();
+        return false;
+    }
+
+    // Si 'product_path_img' est présent dans les données, mettez à jour l'image du produit
+    if (isset($data['product_path_img'])) {
+        $sql = "UPDATE product_pictures SET product_path_img = :product_path_img WHERE product_id = :product_id";
+        $params = [
+            ':product_path_img' => $data['product_path_img'],
+            ':product_id' => $id
+        ];
+
+        // Exécute la requête SQL
+        $result = executeQuery($db, $sql, $params);
+        if ($result === false) {
+            echo "Erreur lors de la mise à jour de l'image du produit.";
+            $db->rollBack();
+            return false;
+        }
+    }
+
+    // Si 'doctor_id' est présent dans les données, mettez à jour le 'doctor_id' du produit
+    if (isset($data['doctor_id'])) {
+        $sql = "UPDATE doctors_products SET doctor_id = :doctor_id WHERE product_id = :product_id";
+        $params = [
+            ':doctor_id' => $data['doctor_id'],
+            ':product_id' => $id
+        ];
+
+        // Exécute la requête SQL
+        $result = executeQuery($db, $sql, $params);
+        if ($result === false) {
+            echo "Erreur lors de la mise à jour du médecin associé.";
+            $db->rollBack();
+            return false;
+        }
+    }
+
+    // Si tout se passe bien, valider la transaction
+    $db->commit();
+
+    return true;
+}
+
 function deleteProduct($db, $id)
 {
     try {
+        // Commencer la transaction
+        $db->beginTransaction();
+
         // Retourne le product_path_img
         $ImagePathSql = "SELECT 
                     product_pictures.product_path_img 
                     FROM products 
                     INNER JOIN product_pictures ON products.id = product_pictures.product_id
                     WHERE products.id = :current_id";
-
         $ImagePath = findDataById($db, $ImagePathSql, $id);
 
-        $sql = "DELETE FROM `products` WHERE id = :product_id";
+        // Supprimer d'abord les entrées dans la table product_pictures associées au produit
+        $sqlDeletePictures = "DELETE FROM product_pictures WHERE product_id = :product_id";
+        $params = [':product_id' => $id];
+        $result = executeQuery($db, $sqlDeletePictures, $params);
+        if ($result === false) {
+            // Annulation de la transaction
+            $db->rollBack();
+            return;
+        }
 
-        // Définition des paramètres de liaison dans un tableau pour la requête SQL préparée.
-        $params = [
-            ':product_id' => $id,
-        ];
+        // Ensuite, supprimer les associations dans la table doctors_products
+        $sqlDeleteAssociations = "DELETE FROM doctors_products WHERE product_id = :product_id";
+        $result = executeQuery($db, $sqlDeleteAssociations, $params);
+        if ($result === false) {
+            // Annulation de la transaction
+            $db->rollBack();
+            return;
+        }
 
-        // Execute de la requête préparée via la fonction executeQuery
-        if (executeQuery($db, $sql, $params)) {
-            // Supprime le fichier de l'image du produit
+        // Ensuite, supprimer le produit lui-même
+        $sqlDeleteProduct = "DELETE FROM products WHERE id = :product_id";
+        $result = executeQuery($db, $sqlDeleteProduct, $params);
+        if ($result === false) {
+            // Annulation de la transaction
+            $db->rollBack();
+            return;
+        }
+
+        // Si tout se passe bien, supprimer le fichier de l'image du produit
+        if (file_exists($ImagePath)) {
             unlink($ImagePath);
-        };
+        }
+
+        // Si tout se passe bien, valider la transaction
+        $db->commit();
     } catch (PDOException $e) {
+        // Une erreur s'est produite, annuler la transaction
+        $db->rollBack();
         echo "Erreur : " . $e->getMessage();
     }
 }
